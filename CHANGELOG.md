@@ -20,3 +20,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Setup winston
 * Setup zod
 * Setup typst
+* Install xlxs (SheetJS)
