@@ -13,3 +13,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Setup docker compose dan dockerfile
 * Setup .env
 * Setup jenkinsfile
+* Setup config for Cloudflare R2
+* Setup drizzle-orm with postgresql & ULID
