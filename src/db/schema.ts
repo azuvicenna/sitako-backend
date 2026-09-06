@@ -98,6 +98,7 @@ export const stacks = pgTable(
         onDelete: "restrict",
         onUpdate: "restrict",
       }),
+    kdSusunan: text("kd_susunan").notNull(),
     nomorSusunan: integer("nomor_susunan").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },

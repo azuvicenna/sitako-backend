@@ -1,4 +1,4 @@
-import { count, eq } from "drizzle-orm";
+import { count, eq, and, ilike, or } from "drizzle-orm";
 import { db } from "../../db";
 import { books } from "../../db/schema";
 import redisClient from "../../config/redis";
@@ -7,8 +7,9 @@ export async function findBooksWithPagination(
   bookType: string,
   page: number = 1,
   limit: number = 10,
+  search: string = "",
 ) {
-  const cacheKey = `book:book-type:${bookType}:page:${page}:limit:${limit}`;
+  const cacheKey = `book:book-type:${bookType}:search:${search}:page:${page}:limit:${limit}`;
   const cachedData = await redisClient.get(cacheKey);
 
   if (cachedData) {
@@ -16,18 +17,21 @@ export async function findBooksWithPagination(
   }
 
   const offset = (page - 1) * limit;
+  const whereClause = search
+    ? and(
+        eq(books.tipeBuku, bookType as any),
+        or(
+          ilike(books.judul, `%${search}%`),
+          ilike(books.penulis, `%${search}%`),
+          ilike(books.penerbit, `%${search}%`),
+          ilike(books.isbn, `%${search}%`),
+        ),
+      )
+    : eq(books.tipeBuku, bookType as any);
 
   const [data, countResult] = await Promise.all([
-    db
-      .select()
-      .from(books)
-      .where(eq(books.tipeBuku, bookType as any))
-      .limit(limit)
-      .offset(offset),
-    db
-      .select({ total: count() })
-      .from(books)
-      .where(eq(books.tipeBuku, bookType as any)),
+    db.select().from(books).where(whereClause).limit(limit).offset(offset),
+    db.select({ total: count() }).from(books).where(whereClause),
   ]);
 
   const totalRows = Number(countResult[0]?.total ?? 0);

@@ -1,4 +1,4 @@
-import { count, eq, desc } from "drizzle-orm";
+import { count, eq, desc, and, ilike } from "drizzle-orm";
 import { db } from "../../db";
 import { transactions } from "../../db/schema";
 import redisClient from "../../config/redis";
@@ -7,8 +7,9 @@ export async function findTransactionsWithPagination(
   status: string,
   page: number = 1,
   limit: number = 10,
+  search: string = "",
 ) {
-  const cacheKey = `transaction:status:${status}:page:${page}:limit:${limit}`;
+  const cacheKey = `transaction:search:${search}:status:${status}:page:${page}:limit:${limit}`;
   const cachedData = await redisClient.get(cacheKey);
 
   if (cachedData) {
@@ -16,8 +17,11 @@ export async function findTransactionsWithPagination(
   }
 
   const offset = (page - 1) * limit;
-  const whereClause =
-    status === "Semua" ? undefined : eq(transactions.status, status as any);
+
+  const whereClause = and(
+    status === "Semua" ? undefined : eq(transactions.status, status as any),
+    search ? ilike(transactions.kdTransaksi, `%${search}%`) : undefined,
+  );
 
   const [data, countResult] = await Promise.all([
     db

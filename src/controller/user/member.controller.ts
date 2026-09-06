@@ -3,12 +3,16 @@ import * as memberRepository from "../../repositories/user/member.repository";
 
 export const getMemberHandler = async (req: Request, res: Response) => {
   try {
+    const statusActive = req.params.statusActive as string;
     const page = Math.max(1, parseInt(req.query.page as string) || 1);
     const limit = Math.max(1, parseInt(req.query.limit as string) || 10);
+    const search = (req.query.search as string) || "";
 
     const result = await memberRepository.findMembersWithPagination(
+      statusActive,
       page,
       limit,
+      search,
     );
 
     return res.status(200).json({

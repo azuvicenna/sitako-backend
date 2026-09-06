@@ -5,10 +5,12 @@ export const getFinePaymentHandler = async (req: Request, res: Response) => {
   try {
     const page = Math.max(1, parseInt(req.query.page as string) || 1);
     const limit = Math.max(1, parseInt(req.query.limit as string) || 10);
+    const search = (req.query.search as string) || "";
 
     const result = await paymentHistoryRepository.findFinePaymentWithPagination(
       page,
       limit,
+      search
     );
 
     return res.status(200).json({

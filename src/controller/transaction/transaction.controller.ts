@@ -25,11 +25,13 @@ export const getTransactionHandler = async (req: Request, res: Response) => {
 
     const page = Math.max(1, parseInt(req.query.page as string) || 1);
     const limit = Math.max(1, parseInt(req.query.limit as string) || 10);
+    const search = (req.query.search as string) || "";
 
     const result = await transactionRepository.findTransactionsWithPagination(
       status,
       page,
       limit,
+      search
     );
 
     return res.status(200).json({

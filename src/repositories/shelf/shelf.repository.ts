@@ -1,4 +1,4 @@
-import { count } from "drizzle-orm";
+import { count, ilike } from "drizzle-orm";
 import { db } from "../../db";
 import { shelves } from "../../db/schema";
 import redisClient from "../../config/redis";
@@ -6,8 +6,9 @@ import redisClient from "../../config/redis";
 export async function findShelvesWithPagination(
   page: number = 1,
   limit: number = 10,
+  search: string = "",
 ) {
-  const cacheKey = `shelf:page:${page}:limit:${limit}`;
+  const cacheKey = `shelf:search:${search}:page:${page}:limit:${limit}`;
   const cachedData = await redisClient.get(cacheKey);
 
   if (cachedData) {
@@ -15,10 +16,13 @@ export async function findShelvesWithPagination(
   }
 
   const offset = (page - 1) * limit;
+  const whereClause = search
+    ? ilike(shelves.namaRak, `%${search}%`)
+    : undefined;
 
   const [data, countResult] = await Promise.all([
-    db.select().from(shelves).limit(limit).offset(offset),
-    db.select({ total: count() }).from(shelves),
+    db.select().from(shelves).where(whereClause).limit(limit).offset(offset),
+    db.select({ total: count() }).from(shelves).where(whereClause),
   ]);
 
   const totalRows = Number(countResult[0]?.total ?? 0);

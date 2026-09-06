@@ -1,4 +1,4 @@
-import { count } from "drizzle-orm";
+import { count, or, ilike } from "drizzle-orm";
 import { db } from "../../db";
 import { fines } from "../../db/schema";
 import redisClient from "../../config/redis";
@@ -6,8 +6,9 @@ import redisClient from "../../config/redis";
 export async function findFinesWithPagination(
   page: number = 1,
   limit: number = 10,
+  search: string = "",
 ) {
-  const cacheKey = `fine:page:${page}:limit:${limit}`;
+  const cacheKey = `fine:search:${search}:page:${page}:limit:${limit}`;
   const cachedData = await redisClient.get(cacheKey);
 
   if (cachedData) {
@@ -15,10 +16,17 @@ export async function findFinesWithPagination(
   }
 
   const offset = (page - 1) * limit;
+  const whereClause = search
+    ? or(
+        ilike(fines.jenisDenda as any, `%${search}%`),
+        ilike(fines.hargaDenda as any, `%${search}%`),
+        ilike(fines.metodePerhitungan as any, `%${search}%`),
+      )
+    : undefined;
 
   const [data, countResult] = await Promise.all([
-    db.select().from(fines).limit(limit).offset(offset),
-    db.select({ total: count() }).from(fines),
+    db.select().from(fines).where(whereClause).limit(limit).offset(offset),
+    db.select({ total: count() }).from(fines).where(whereClause),
   ]);
 
   const totalRows = Number(countResult[0]?.total ?? 0);

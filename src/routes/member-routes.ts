@@ -5,6 +5,6 @@ import { paginationSchema } from "../validations/pagination.schema";
 
 const router = Router();
 
-router.get("/", validate(paginationSchema), getMemberHandler);
+router.get("/:statusActive", validate(paginationSchema), getMemberHandler);
 
 export default router;
