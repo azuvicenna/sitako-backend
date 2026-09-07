@@ -2,6 +2,7 @@ import { count, eq, desc, and, ilike, or } from "drizzle-orm";
 import { db } from "../../db";
 import { books, librarians, members, transactions } from "../../db/schema";
 import redisClient from "../../config/redis";
+import logger from "../../utils/logger";
 
 export async function findTransactionsWithPagination(
   status: string,
@@ -13,8 +14,12 @@ export async function findTransactionsWithPagination(
   const cachedData = await redisClient.get(cacheKey);
 
   if (cachedData) {
+    logger.info(`Cache hit: Mengambil data dari Redis untuk key ${cacheKey}`);
+
     return JSON.parse(cachedData);
   }
+
+  logger.info(`Cache miss: Mengambil data dari Database untuk key ${cacheKey}`);
 
   const offset = (page - 1) * limit;
 
@@ -77,6 +82,8 @@ export async function findTransactionsWithPagination(
   };
 
   await redisClient.setEx(cacheKey, 60, JSON.stringify(result));
+
+  logger.info(`Data baru berhasil disimpan ke Redis untuk key ${cacheKey}`);
 
   return result;
 }

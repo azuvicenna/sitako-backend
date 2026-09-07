@@ -2,6 +2,7 @@ import { count, eq, and, ilike, or, desc } from "drizzle-orm";
 import { db } from "../../db";
 import { books } from "../../db/schema";
 import redisClient from "../../config/redis";
+import logger from "../../utils/logger";
 
 export async function findBooksWithPagination(
   bookType: string,
@@ -13,8 +14,12 @@ export async function findBooksWithPagination(
   const cachedData = await redisClient.get(cacheKey);
 
   if (cachedData) {
+    logger.info(`Cache hit: Mengambil data dari Redis untuk key ${cacheKey}`);
+
     return JSON.parse(cachedData);
   }
+
+  logger.info(`Cache miss: Mengambil data dari Database untuk key ${cacheKey}`);
 
   const offset = (page - 1) * limit;
   const whereClause = search
@@ -56,6 +61,8 @@ export async function findBooksWithPagination(
   };
 
   await redisClient.setEx(cacheKey, 60, JSON.stringify(result));
+
+  logger.info(`Data baru berhasil disimpan ke Redis untuk key ${cacheKey}`);
 
   return result;
 }

@@ -37,7 +37,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [NOTE] Task spesifik mengerjakan modul book, fine, fine-payment, shelf, stack, transaction, librarian, dan member
 - Menambahkan fitur search berdasarkan relasi pada modul fine, fine-payment, stack, dan transaction
 - Menambahkan orderby ke modul book, fine, fine-payment, shelf, stack, transaction, librarian, dan member
-- Membuat zod validation create dan update, modul masih sama seperti diatas 
+- Membuat zod validation create dan update
 - Membuat generator kode transaksi di transaction-code.ts
+- Menyisipkan kode logger winston ke dalam controller, repository, dan membuat request-logger
