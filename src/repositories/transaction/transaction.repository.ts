@@ -1,6 +1,6 @@
-import { count, eq, desc, and, ilike } from "drizzle-orm";
+import { count, eq, desc, and, ilike, or } from "drizzle-orm";
 import { db } from "../../db";
-import { transactions } from "../../db/schema";
+import { books, librarians, members, transactions } from "../../db/schema";
 import redisClient from "../../config/redis";
 
 export async function findTransactionsWithPagination(
@@ -18,20 +18,47 @@ export async function findTransactionsWithPagination(
 
   const offset = (page - 1) * limit;
 
+  const searchCondition = search
+    ? or(
+        ilike(transactions.kdTransaksi, `%${search}%`),
+        ilike(members.nama, `%${search}%`),
+        ilike(librarians.nama, `%${search}%`),
+        ilike(books.judul, `%${search}%`),
+      )
+    : undefined;
+
   const whereClause = and(
     status === "Semua" ? undefined : eq(transactions.status, status as any),
-    search ? ilike(transactions.kdTransaksi, `%${search}%`) : undefined,
+    searchCondition,
   );
 
   const [data, countResult] = await Promise.all([
     db
-      .select()
+      .select({
+        id: transactions.id,
+        kdTransaksi: transactions.kdTransaksi,
+        tglPinjam: transactions.tglPinjam,
+        tglKembali: transactions.tglKembali,
+        status: transactions.status,
+        namaAnggota: members.nama,
+        namaPustakawan: librarians.nama,
+        judulBuku: books.judul,
+      })
       .from(transactions)
+      .innerJoin(members, eq(transactions.anggotaId, members.id))
+      .innerJoin(librarians, eq(transactions.pustakawanId, librarians.id))
+      .innerJoin(books, eq(transactions.bukuId, books.id))
       .where(whereClause)
       .orderBy(desc(transactions.createdAt))
       .limit(limit)
       .offset(offset),
-    db.select({ total: count() }).from(transactions).where(whereClause),
+    db
+      .select({ total: count() })
+      .from(transactions)
+      .innerJoin(members, eq(transactions.anggotaId, members.id))
+      .innerJoin(librarians, eq(transactions.pustakawanId, librarians.id))
+      .innerJoin(books, eq(transactions.bukuId, books.id))
+      .where(whereClause),
   ]);
 
   const totalRows = Number(countResult[0]?.total ?? 0);

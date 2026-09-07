@@ -1,9 +1,9 @@
-import { count, eq, asc, and, or, ilike } from "drizzle-orm";
+import { count, eq, asc, and, or, ilike, sql } from "drizzle-orm";
 import { db } from "../../db";
-import { stacks } from "../../db/schema";
+import { books, stacks } from "../../db/schema";
 import redisClient from "../../config/redis";
 
-export async function findStackesWithPagination(
+export async function findStacksWithPagination(
   shelfId: string,
   page: number = 1,
   limit: number = 10,
@@ -23,20 +23,33 @@ export async function findStackesWithPagination(
         eq(stacks.rakId, shelfId),
         or(
           ilike(stacks.kdSusunan, `%${search}%`),
-          ilike(stacks.nomorSusunan as any, `%${search}%`),
+          ilike(sql`CAST(${stacks.nomorSusunan} AS TEXT)`, `%${search}%`),
+          ilike(books.judul, `%${search}%`),
         ),
       )
     : eq(stacks.rakId, shelfId);
 
   const [data, countResult] = await Promise.all([
     db
-      .select()
+      .select({
+        id: stacks.id,
+        bukuId: stacks.bukuId,
+        kdSusunan: stacks.kdSusunan,
+        nomorSusunan: stacks.nomorSusunan,
+        judulBuku: books.judul,
+        createdAt: stacks.createdAt,
+      })
       .from(stacks)
+      .innerJoin(books, eq(stacks.bukuId, books.id))
       .where(whereClause)
       .orderBy(asc(stacks.nomorSusunan))
       .limit(limit)
       .offset(offset),
-    db.select({ total: count() }).from(stacks).where(whereClause),
+    db
+      .select({ total: count() })
+      .from(stacks)
+      .innerJoin(books, eq(stacks.bukuId, books.id))
+      .where(whereClause),
   ]);
 
   const totalRows = Number(countResult[0]?.total ?? 0);

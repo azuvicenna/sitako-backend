@@ -32,3 +32,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [NOTE] Task spesifik mengerjakan modul book, fine, fine-payment, shelf, stack, transaction, librarian, dan member
 - Menambahkan fitur pagination dan endpoint GET data untuk pustakawan
 - Menambahkan fitur pencarian namun masih belum support pencarian berdasarkan relasi
+
+## [1.1.0] - 2026-09-07
+
+### Added
+
+- Menambahkan fitur search berdasarkan relasi pada modul fine, fine-payment, stack, dan transaction
+- Menambahkan orderby ke modul book, fine, fine-payment, shelf, stack, transaction, librarian, dan member 

@@ -1,4 +1,4 @@
-import { count, eq, and, ilike, or } from "drizzle-orm";
+import { count, eq, and, ilike, or, desc } from "drizzle-orm";
 import { db } from "../../db";
 import { books } from "../../db/schema";
 import redisClient from "../../config/redis";
@@ -30,7 +30,13 @@ export async function findBooksWithPagination(
     : eq(books.tipeBuku, bookType as any);
 
   const [data, countResult] = await Promise.all([
-    db.select().from(books).where(whereClause).limit(limit).offset(offset),
+    db
+      .select()
+      .from(books)
+      .where(whereClause)
+      .orderBy(desc(books.createdAt))
+      .limit(limit)
+      .offset(offset),
     db.select({ total: count() }).from(books).where(whereClause),
   ]);
 

@@ -1,4 +1,4 @@
-import { count, or, ilike, eq, and } from "drizzle-orm";
+import { count, or, ilike, eq, and, desc } from "drizzle-orm";
 import { db } from "../../db";
 import { members } from "../../db/schema";
 import redisClient from "../../config/redis";
@@ -9,7 +9,7 @@ export async function findMembersWithPagination(
   limit: number = 10,
   search: string = "",
 ) {
-  const cacheKey = `member:search:${search}:page:${page}:limit:${limit}`;
+  const cacheKey = `member:status:${statusActive}:search:${search}:page:${page}:limit:${limit}`;
   const cachedData = await redisClient.get(cacheKey);
 
   if (cachedData) {
@@ -35,7 +35,13 @@ export async function findMembersWithPagination(
   const whereClause = and(statusCondition, searchCondition);
 
   const [data, countResult] = await Promise.all([
-    db.select().from(members).where(whereClause).limit(limit).offset(offset),
+    db
+      .select()
+      .from(members)
+      .where(whereClause)
+      .orderBy(desc(members.createdAt))
+      .limit(limit)
+      .offset(offset),
     db.select({ total: count() }).from(members).where(whereClause),
   ]);
 

@@ -1,4 +1,4 @@
-import { count, ilike } from "drizzle-orm";
+import { count, ilike, desc } from "drizzle-orm";
 import { db } from "../../db";
 import { shelves } from "../../db/schema";
 import redisClient from "../../config/redis";
@@ -21,7 +21,13 @@ export async function findShelvesWithPagination(
     : undefined;
 
   const [data, countResult] = await Promise.all([
-    db.select().from(shelves).where(whereClause).limit(limit).offset(offset),
+    db
+      .select()
+      .from(shelves)
+      .where(whereClause)
+      .orderBy(desc(shelves.createdAt))
+      .limit(limit)
+      .offset(offset),
     db.select({ total: count() }).from(shelves).where(whereClause),
   ]);
 

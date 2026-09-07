@@ -1,4 +1,4 @@
-import { count, or, ilike, eq, and } from "drizzle-orm";
+import { count, or, ilike, eq, and, desc } from "drizzle-orm";
 import { db } from "../../db";
 import { librarians } from "../../db/schema";
 import redisClient from "../../config/redis";
@@ -9,7 +9,7 @@ export async function findLibrariansWithPagination(
   limit: number = 10,
   search: string = "",
 ) {
-  const cacheKey = `librarian:search:${search}:page:${page}:limit:${limit}`;
+  const cacheKey = `librarian:status:${statusActive}:search:${search}:page:${page}:limit:${limit}`;
   const cachedData = await redisClient.get(cacheKey);
 
   if (cachedData) {
@@ -35,7 +35,13 @@ export async function findLibrariansWithPagination(
   const whereClause = and(statusCondition, searchCondition);
 
   const [data, countResult] = await Promise.all([
-    db.select().from(librarians).where(whereClause).limit(limit).offset(offset),
+    db
+      .select()
+      .from(librarians)
+      .where(whereClause)
+      .orderBy(desc(librarians.createdAt))
+      .limit(limit)
+      .offset(offset),
     db.select({ total: count() }).from(librarians).where(whereClause),
   ]);
 

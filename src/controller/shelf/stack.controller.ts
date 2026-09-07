@@ -16,7 +16,7 @@ export const getStackHandler = async (req: Request, res: Response) => {
     const limit = Math.max(1, parseInt(req.query.limit as string) || 10);
     const search = (req.query.search as string) || "";
 
-    const result = await stackRepository.findStackesWithPagination(
+    const result = await stackRepository.findStacksWithPagination(
       shelfId,
       page,
       limit,

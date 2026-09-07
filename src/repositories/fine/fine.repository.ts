@@ -1,6 +1,6 @@
-import { count, or, ilike } from "drizzle-orm";
+import { count, or, ilike, eq, sql, desc } from "drizzle-orm";
 import { db } from "../../db";
-import { fines } from "../../db/schema";
+import { books, fines } from "../../db/schema";
 import redisClient from "../../config/redis";
 
 export async function findFinesWithPagination(
@@ -18,15 +18,34 @@ export async function findFinesWithPagination(
   const offset = (page - 1) * limit;
   const whereClause = search
     ? or(
-        ilike(fines.jenisDenda as any, `%${search}%`),
-        ilike(fines.hargaDenda as any, `%${search}%`),
-        ilike(fines.metodePerhitungan as any, `%${search}%`),
+        ilike(sql`CAST(${fines.jenisDenda} AS TEXT)`, `%${search}%`),
+        ilike(sql`CAST(${fines.hargaDenda} AS TEXT)`, `%${search}%`),
+        ilike(sql`CAST(${fines.metodePerhitungan} AS TEXT)`, `%${search}%`),
+        ilike(books.judul, `%${search}%`),
       )
     : undefined;
 
   const [data, countResult] = await Promise.all([
-    db.select().from(fines).where(whereClause).limit(limit).offset(offset),
-    db.select({ total: count() }).from(fines).where(whereClause),
+    db
+      .select({
+        id: fines.id,
+        jenisDenda: fines.jenisDenda,
+        hargaDenda: fines.hargaDenda,
+        metodePerhitungan: fines.metodePerhitungan,
+        judulBuku: books.judul,
+        createdAt: fines.createdAt,
+      })
+      .from(fines)
+      .innerJoin(books, eq(fines.bukuId, books.id))
+      .where(whereClause)
+      .orderBy(desc(fines.createdAt))
+      .limit(limit)
+      .offset(offset),
+    db
+      .select({ total: count() })
+      .from(fines)
+      .innerJoin(books, eq(fines.bukuId, books.id))
+      .where(whereClause),
   ]);
 
   const totalRows = Number(countResult[0]?.total ?? 0);
