@@ -7,7 +7,7 @@ import {
   uniqueIndex,
   timestamp,
 } from "drizzle-orm/pg-core";
-import { generateId } from "../utils/ulid";
+import { generateId } from "../utils/generators/ulid";
 
 export const bookTypeEnum = pgEnum("tipe_buku_enum", ["Fisik", "Digital"]);
 export const fineTypeEnum = pgEnum("tipe_denda_enum", ["Terlambat", "Hilang"]);

@@ -45,4 +45,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Menyisipkan kode logger winston ke dalam controller, repository, dan membuat request-logger
 
 ### Fix
+
 - Merefaktor kode controller dan repository
+
+### Change
+
+- Merestruktur isi folder utils agar terkategori (auth, core, data, generators, services)
+- Merestruktur isi folder controller, repository, dan routes agar berorientasi role user

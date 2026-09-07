@@ -1,14 +1,15 @@
 import { Router } from "express";
 
-import bookRoutes from "./book-routes";
-import shelfRoutes from "./shelf-routes";
-import librarianRoutes from "./librarian-routes";
-import memberRoutes from "./member-routes";
-import finePaymentRoutes from "./fine-payment-routes";
-import transactionRoutes from "./transaction-routes";
+import bookRoutes from "./librarian-routes/book";
+import shelfRoutes from "./librarian-routes/shelf";
+import librarianRoutes from "./librarian-routes/librarian";
+import memberRoutes from "./librarian-routes/member";
+import finePaymentRoutes from "./librarian-routes/fine-payment";
+import transactionRoutes from "./librarian-routes/transaction";
 
 const router = Router();
 
+// librarian routes
 router.use("/books", bookRoutes);
 router.use("/shelves", shelfRoutes);
 router.use("/user/librarians", librarianRoutes);
