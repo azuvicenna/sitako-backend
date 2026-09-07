@@ -1,7 +1,7 @@
 import { count, ilike, desc } from "drizzle-orm";
-import { db } from "../../../db";
-import { shelves } from "../../../db/schema";
-import { withCacheAndPagination } from "../../../utils/data/repository";
+import { db } from "@/db";
+import { shelves } from "@/db/schema";
+import { withCacheAndPagination } from "@/utils/data/repository";
 
 export async function findShelvesWithPagination(
   page: number = 1,

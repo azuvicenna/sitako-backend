@@ -1,5 +1,5 @@
-import redisClient from "../config/redis";
-import logger from "./core/logger";
+import redisClient from "@/config/redis";
+import logger from "@/utils/core/logger";
 
 export async function withCacheAndPagination<T>(
   cacheKey: string,

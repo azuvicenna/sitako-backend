@@ -1,4 +1,4 @@
-import redisClient from "../config/redis";
+import redisClient from "@/config/redis";
 
 export async function clearCacheByPattern(pattern: string) {
   let cursor = "0";

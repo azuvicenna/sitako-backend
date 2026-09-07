@@ -1,13 +1,13 @@
 import { count, desc, or, ilike, sql, eq } from "drizzle-orm";
-import { db } from "../../../db";
+import { db } from "@/db";
 import {
   books,
   finePayments,
   librarians,
   members,
   transactions,
-} from "../../../db/schema";
-import { withCacheAndPagination } from "../../../utils/data/repository";
+} from "@/db/schema";
+import { withCacheAndPagination } from "@/utils/data/repository";
 
 export async function findFinePaymentWithPagination(
   page: number = 1,

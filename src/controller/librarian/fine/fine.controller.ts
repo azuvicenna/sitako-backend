@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import * as fineRepository from "../../../repositories/librarian/fine/fine.repository";
-import logger from "../../../utils/core/logger";
+import * as fineRepository from "@/repositories/librarian/fine/fine.repository";
+import logger from "@/utils/core/logger";
 import {
   getPaginationParams,
   sendError,
   sendSuccess,
-} from "../../../utils/core/handler";
+} from "@/utils/core/handler";
 
 export const getFineHandler = async (req: Request, res: Response) => {
   try {

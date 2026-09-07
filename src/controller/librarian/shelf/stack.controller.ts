@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import * as stackRepository from "../../../repositories/librarian/shelf/stack.repository";
-import logger from "../../../utils/core/logger";
+import * as stackRepository from "@/repositories/librarian/shelf/stack.repository";
+import logger from "@/utils/core/logger";
 import {
   getPaginationParams,
   sendError,
   sendSuccess,
-} from "../../../utils/core/handler";
+} from "@/utils/core/handler";
 
 export const getStackHandler = async (req: Request, res: Response) => {
   try {

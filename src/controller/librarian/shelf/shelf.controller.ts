@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import * as shelfRepository from "../../../repositories/librarian/shelf/shelf.repository";
-import logger from "../../../utils/core/logger";
+import * as shelfRepository from "@/repositories/librarian/shelf/shelf.repository";
+import logger from "@/utils/core/logger";
 import {
   getPaginationParams,
   sendError,
   sendSuccess,
-} from "../../../utils/core/handler";
+} from "@/utils/core/handler";
 
 export const getShelfHandler = async (req: Request, res: Response) => {
   try {

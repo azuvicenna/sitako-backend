@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import * as librarianRepository from "../../../repositories/librarian/user/librarian.repository";
-import logger from "../../../utils/core/logger";
+import * as librarianRepository from "@/repositories/librarian/user/librarian.repository";
+import logger from "@/utils/core/logger";
 import {
   getPaginationParams,
   sendError,
   sendSuccess,
-} from "../../../utils/core/handler";
+} from "@/utils/core/handler";
 
 export const getLibrarianHandler = async (req: Request, res: Response) => {
   try {

@@ -1,5 +1,5 @@
 import { PutObjectCommand } from "@aws-sdk/client-s3";
-import { s3Client, R2_BUCKET } from "../config/r2";
+import { s3Client, R2_BUCKET } from "@/config/r2";
 
 export async function uploadFile(
   folderName: string,

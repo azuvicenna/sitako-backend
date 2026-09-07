@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import * as memberRepository from "../../../repositories/librarian/user/member.repository";
-import logger from "../../../utils/core/logger";
+import * as memberRepository from "@/repositories/librarian/user/member.repository";
+import logger from "@/utils/core/logger";
 import {
   getPaginationParams,
   sendError,
   sendSuccess,
-} from "../../../utils/core/handler";
+} from "@/utils/core/handler";
 
 export const getMemberHandler = async (req: Request, res: Response) => {
   try {

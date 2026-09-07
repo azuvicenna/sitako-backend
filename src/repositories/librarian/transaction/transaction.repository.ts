@@ -1,7 +1,7 @@
 import { count, eq, desc, and, ilike, or } from "drizzle-orm";
-import { db } from "../../../db";
-import { books, librarians, members, transactions } from "../../../db/schema";
-import { withCacheAndPagination } from "../../../utils/data/repository";
+import { db } from "@/db";
+import { books, librarians, members, transactions } from "@/db/schema";
+import { withCacheAndPagination } from "@/utils/data/repository";
 
 export async function findTransactionsWithPagination(
   status: string,

@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx watch src/server.ts",
-    "build": "tsc",
+    "build": "tsc && tsc-alias",
     "start": "node dist/server.js",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
@@ -39,6 +39,8 @@
     "drizzle-kit": "^0.31.10",
     "jest": "^30.5.1",
     "ts-jest": "^29.4.12",
+    "tsc-alias": "^1.9.4",
+    "tsconfig-paths": "^4.2.0",
     "tsx": "^4.23.13",
     "typescript": "^7.0.2"
   }

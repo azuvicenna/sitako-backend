@@ -1,7 +1,7 @@
 import { count, eq, asc, and, or, ilike, sql } from "drizzle-orm";
-import { db } from "../../../db";
-import { books, stacks } from "../../../db/schema";
-import { withCacheAndPagination } from "../../../utils/data/repository";
+import { db } from "@/db";
+import { books, stacks } from "@/db/schema";
+import { withCacheAndPagination } from "@/utils/data/repository";
 
 export async function findStacksWithPagination(
   shelfId: string,

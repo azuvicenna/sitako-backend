@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { getFinePaymentHandler } from "../../controller/librarian/fine-payment/fine-payment.controller";
-import { validate } from "../../middleware/validate";
-import { paginationSchema } from "../../validations/pagination.schema";
+import { getFinePaymentHandler } from "@/controller/librarian/fine-payment/fine-payment.controller";
+import { validate } from "@/middleware/validate";
+import { paginationSchema } from "@/validations/pagination.schema";
 
 const router = Router();
 

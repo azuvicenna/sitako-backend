@@ -1,7 +1,7 @@
 import { count, or, ilike, eq, and, desc } from "drizzle-orm";
-import { db } from "../../../db";
-import { librarians } from "../../../db/schema";
-import { withCacheAndPagination } from "../../../utils/data/repository";
+import { db } from "@/db";
+import { librarians } from "@/db/schema";
+import { withCacheAndPagination } from "@/utils/data/repository";
 
 export async function findLibrariansWithPagination(
   statusActive: string,

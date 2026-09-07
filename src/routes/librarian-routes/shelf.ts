@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { getShelfHandler } from "../../controller/shelf/shelf.controller";
-import { validate } from "../../middleware/validate";
-import { paginationSchema } from "../../validations/pagination.schema";
+import { getShelfHandler } from "@/controller/librarian/shelf/shelf.controller";
+import { validate } from "@/middleware/validate";
+import { paginationSchema } from "@/validations/pagination.schema";
 
 const router = Router();
 

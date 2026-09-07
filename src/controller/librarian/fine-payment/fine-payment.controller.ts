@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import * as paymentHistoryRepository from "../../../repositories/librarian/fine-payment/fine-payment.repository";
-import logger from "../../../utils/core/logger";
+import * as paymentHistoryRepository from "@/repositories/librarian/fine-payment/fine-payment.repository";
+import logger from "@/utils/core/logger";
 import {
   getPaginationParams,
   sendError,
   sendSuccess,
-} from "../../../utils/core/handler";
+} from "@/utils/core/handler";
 
 export const getFinePaymentHandler = async (req: Request, res: Response) => {
   try {

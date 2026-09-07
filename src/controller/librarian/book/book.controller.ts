@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
-import * as bookRepository from "../../../repositories/librarian/book/book.repository";
-import { bookTypeEnum } from "../../../db/schema";
-import logger from "../../../utils/core/logger";
+import * as bookRepository from "@/repositories/librarian/book/book.repository";
+import { bookTypeEnum } from "@/db/schema";
+import logger from "@/utils/core/logger";
 import {
   getPaginationParams,
   sendError,
   sendSuccess,
-} from "../../../utils/core/handler";
+} from "@/utils/core/handler";
 
 export const getBookHandler = async (req: Request, res: Response) => {
   try {

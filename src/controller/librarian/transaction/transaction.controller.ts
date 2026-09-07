@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
-import * as transactionRepository from "../../../repositories/librarian/transaction/transaction.repository";
-import { transactionStatusEnum } from "../../../db/schema";
-import logger from "../../../utils/core/logger";
+import * as transactionRepository from "@/repositories/librarian/transaction/transaction.repository";
+import { transactionStatusEnum } from "@/db/schema";
+import logger from "@/utils/core/logger";
 import {
   getPaginationParams,
   sendError,
   sendSuccess,
-} from "../../../utils/core/handler";
+} from "@/utils/core/handler";
 
 export const getTransactionHandler = async (req: Request, res: Response) => {
   try {

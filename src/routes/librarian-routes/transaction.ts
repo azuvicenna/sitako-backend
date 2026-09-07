@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { getTransactionHandler } from "../../controller/transaction/transaction.controller";
-import { validate } from "../../middleware/validate";
-import { paginationSchema } from "../../validations/pagination.schema";
+import { getTransactionHandler } from "@/controller/librarian/transaction/transaction.controller";
+import { validate } from "@/middleware/validate";
+import { paginationSchema } from "@/validations/pagination.schema";
 
 const router = Router();
 
