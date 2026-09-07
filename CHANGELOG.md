@@ -43,3 +43,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Membuat zod validation create dan update
 - Membuat generator kode transaksi di transaction-code.ts
 - Menyisipkan kode logger winston ke dalam controller, repository, dan membuat request-logger
+
+### Fix
+- Merefaktor kode controller dan repository
