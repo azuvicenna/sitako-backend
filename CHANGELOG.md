@@ -58,3 +58,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Menambahkan auth dengan jsonwebtoken dengan HTTP-only cookies
+- Menambahkan verfikasi captcha dan mengimplementasikannya pada login

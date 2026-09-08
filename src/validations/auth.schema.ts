@@ -7,4 +7,7 @@ export const loginSchema = z.object({
   password: z
     .string({ message: "Password wajib diisi" })
     .min(1, { message: "Password tidak boleh kosong" }),
+  captcha: z
+    .string({ message: "Captcha wajib diisi" })
+    .min(1, { message: "Captcha tidak boleh kosong" }),
 });
