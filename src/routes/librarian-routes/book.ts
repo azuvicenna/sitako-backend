@@ -1,13 +1,26 @@
 import { Router } from "express";
-import { getBookHandler } from "@/controller/librarian/book/book.controller";
+import {
+  getBookHandler,
+  showBook,
+  createBook,
+  updateBook,
+  deleteBook,
+} from "@/controller/librarian/book/book.controller";
 import { validate } from "@/middleware/validate";
-import { paginationSchema } from "@/validations/pagination.schema";
-import { verifyAuth } from "@/middleware/auth";
+import { upload } from "@/middleware/upload";
+import { createBookSchema, updateBookSchema } from "@/validations/book.schema";
 
 const router = Router();
 
-router.use(verifyAuth)
+const bookUpload = upload.fields([
+  { name: "cover", maxCount: 1 },
+  { name: "file", maxCount: 1 },
+]);
 
-router.get("/:bookType", validate(paginationSchema), getBookHandler);
+router.get("/:bookType", getBookHandler);
+router.get("/detail/:id", showBook);
+router.post("/:bookType", bookUpload, validate(createBookSchema), createBook);
+router.put("/:id", bookUpload, validate(updateBookSchema), updateBook);
+router.delete("/:id", deleteBook);
 
 export default router;

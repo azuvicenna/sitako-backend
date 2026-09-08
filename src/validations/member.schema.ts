@@ -18,21 +18,20 @@ export const createMemberSchema = z.object({
   telepon: z
     .string({ message: "Nomor telepon wajib diisi" })
     .min(1, { message: "Nomor telepon tidak boleh kosong" }),
-  foto: z
-    .instanceof(File, { message: "Foto wajib diupload" })
-    .refine((file) => file.size <= 2 * 1024 * 1024, {
-      message: "Ukuran foto maksimal 2MB",
-    })
-    .refine(
-      (file) => ["image/jpeg", "image/png", "image/webp"].includes(file.type),
-      { message: "Format foto harus JPG, PNG, atau WEBP" },
-    ),
   status_aktif: z
-    .boolean({ message: "Status aktif tidak valid" })
-    .default(true),
+    .union([z.boolean(), z.string()])
+    .default(true)
+    .transform((val) => val === true || val === "true"),
 });
 
-export const updateMemberSchema = createMemberSchema.partial();
+export const updateMemberSchema = createMemberSchema.partial().extend({
+  status_aktif: z
+    .union([z.boolean(), z.string()])
+    .optional()
+    .transform((val) =>
+      val !== undefined ? val === true || val === "true" : undefined,
+    ),
+});
 
 export type CreateMember = z.infer<typeof createMemberSchema>;
 export type UpdateMember = z.infer<typeof updateMemberSchema>;

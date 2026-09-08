@@ -1,10 +1,15 @@
 import { Request, Response } from "express";
-import * as librarianRepository from "@/repositories/librarian/user/librarian.repository";
+import * as librarianService from "@/services/librarian/user/librarian.service";
 import {
   getPaginationParams,
   sendError,
   sendSuccess,
 } from "@/utils/core/handler";
+import {
+  createLibrarianSchema,
+  imageFileSchema,
+  updateLibrarianSchema,
+} from "@/validations/librarian.schema";
 
 export const getLibrarianHandler = async (req: Request, res: Response) => {
   try {
@@ -19,7 +24,7 @@ export const getLibrarianHandler = async (req: Request, res: Response) => {
 
     const { page, limit, search } = getPaginationParams(req.query);
 
-    const result = await librarianRepository.findLibrariansWithPagination(
+    const result = await librarianService.getLibrariansWithPagination(
       statusActive,
       page,
       limit,
@@ -29,5 +34,108 @@ export const getLibrarianHandler = async (req: Request, res: Response) => {
     return sendSuccess(res, result);
   } catch (error) {
     return sendError(res, error, "getLibrarianHandler");
+  }
+};
+
+export const showLibrarian = async (req: Request, res: Response) => {
+  try {
+    const librarianId = req.params.id as string;
+
+    if (!librarianId) {
+      return res.status(400).json({
+        success: false,
+        message: "ID pustakawan tidak valid",
+      });
+    }
+
+    const result = await librarianService.getLibrarianById(librarianId);
+
+    if (!result) {
+      return res.status(404).json({
+        success: false,
+        message: "Pustakawan tidak ditemukan",
+      });
+    }
+
+    return sendSuccess(res, result);
+  } catch (error) {
+    return sendError(res, error, "showLibrarian");
+  }
+};
+
+export const createLibrarian = async (req: Request, res: Response) => {
+  try {
+    const validatedBody = createLibrarianSchema.parse(req.body);
+    const validatedFile = imageFileSchema.parse(req.file);
+
+    const result = await librarianService.createNewLibrarian(
+      validatedBody,
+      validatedFile,
+    );
+
+    return sendSuccess(res, result, "Anggota berhasil ditambahkan");
+  } catch (error) {
+    return sendError(res, error, "createLibrarian");
+  }
+};
+
+export const updateLibrarian = async (req: Request, res: Response) => {
+  try {
+    const librarianId = req.params.id as string;
+
+    if (!librarianId) {
+      return res.status(400).json({
+        success: false,
+        message: "ID anggota tidak valid",
+      });
+    }
+
+    const validatedBody = updateLibrarianSchema.parse(req.body);
+    const validatedFile = req.file
+      ? imageFileSchema.parse(req.file)
+      : undefined;
+
+    const result = await librarianService.updateExistingLibrarian(
+      librarianId,
+      validatedBody,
+      validatedFile,
+    );
+
+    if (!result) {
+      return res.status(404).json({
+        success: false,
+        message: "Pustakawan tidak ditemukan",
+      });
+    }
+
+    return sendSuccess(res, result, "Data pustakawan berhasil diperbarui");
+  } catch (error) {
+    return sendError(res, error, "updateLibrarian");
+  }
+};
+
+export const deleteLibrarian = async (req: Request, res: Response) => {
+  try {
+    const librarianId = req.params.id as string;
+
+    if (!librarianId) {
+      return res.status(400).json({
+        success: false,
+        message: "ID pustakawan tidak valid",
+      });
+    }
+
+    const result = await librarianService.deleteExistingLibrarian(librarianId);
+
+    if (!result) {
+      return res.status(404).json({
+        success: false,
+        message: "Pustakawan tidak ditemukan",
+      });
+    }
+
+    return sendSuccess(res, result, "Data pustakawan berhasil dihapus");
+  } catch (error) {
+    return sendError(res, error, "deleteLibrarian");
   }
 };

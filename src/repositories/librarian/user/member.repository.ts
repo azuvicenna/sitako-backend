@@ -1,7 +1,12 @@
-import { count, or, ilike, eq, and, desc } from "drizzle-orm";
+import { count, eq, and, ilike, or, desc } from "drizzle-orm";
 import { db } from "@/db";
 import { members } from "@/db/schema";
 import { withCacheAndPagination } from "@/utils/data/repository";
+import { clearCacheByPattern } from "@/utils/core/clear-cache";
+
+const clearMemberCache = async () => {
+  await clearCacheByPattern("member:*");
+};
 
 export async function findMembersWithPagination(
   statusActive: string,
@@ -16,25 +21,38 @@ export async function findMembersWithPagination(
     page,
     limit,
     async (offset, limit) => {
-      const statusCondition =
-        statusActive === "Semua"
-          ? undefined
-          : eq(members.status_aktif, statusActive === "true");
+      const conditions = [];
 
-      const searchCondition = search
-        ? or(
+      if (statusActive !== "Semua") {
+        conditions.push(eq(members.status_aktif, statusActive === "true"));
+      }
+
+      if (search) {
+        conditions.push(
+          or(
             ilike(members.nama, `%${search}%`),
             ilike(members.nis, `%${search}%`),
             ilike(members.email, `%${search}%`),
             ilike(members.telepon, `%${search}%`),
-          )
-        : undefined;
+          ),
+        );
+      }
 
-      const whereClause = and(statusCondition, searchCondition);
+      const whereClause =
+        conditions.length > 0 ? and(...conditions) : undefined;
 
       const [data, countResult] = await Promise.all([
         db
-          .select()
+          .select({
+            id: members.id,
+            nama: members.nama,
+            nis: members.nis,
+            email: members.email,
+            telepon: members.telepon,
+            foto: members.foto,
+            status_aktif: members.status_aktif,
+            createdAt: members.createdAt,
+          })
           .from(members)
           .where(whereClause)
           .orderBy(desc(members.createdAt))
@@ -47,3 +65,69 @@ export async function findMembersWithPagination(
     },
   );
 }
+
+export async function findMemberById(id: string) {
+  const result = await db
+    .select({
+      id: members.id,
+      nama: members.nama,
+      nis: members.nis,
+      email: members.email,
+      telepon: members.telepon,
+      foto: members.foto,
+      status_aktif: members.status_aktif,
+      createdAt: members.createdAt,
+    })
+    .from(members)
+    .where(eq(members.id, id))
+    .limit(1);
+
+  return result[0] || null;
+}
+
+export async function findMemberRawById(id: string) {
+  const result = await db
+    .select()
+    .from(members)
+    .where(eq(members.id, id))
+    .limit(1);
+
+  return result[0] || null;
+}
+
+export const insertMember = async (data: any) => {
+  const result = await db.insert(members).values(data).returning();
+  const created = result[0];
+
+  if (created) {
+    await clearMemberCache();
+  }
+
+  return created;
+};
+
+export const updateMemberById = async (id: string, data: any) => {
+  const result = await db
+    .update(members)
+    .set(data)
+    .where(eq(members.id, id))
+    .returning();
+  const updated = result[0] || null;
+
+  if (updated) {
+    await clearMemberCache();
+  }
+
+  return updated;
+};
+
+export const removeMemberById = async (id: string) => {
+  const result = await db.delete(members).where(eq(members.id, id)).returning();
+  const deleted = result[0] || null;
+
+  if (deleted) {
+    await clearMemberCache();
+  }
+
+  return deleted;
+};

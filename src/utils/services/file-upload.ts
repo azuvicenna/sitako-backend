@@ -1,4 +1,4 @@
-import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { s3Client, R2_BUCKET } from "@/config/r2";
 
 export async function uploadFile(
@@ -15,4 +15,13 @@ export async function uploadFile(
 
   await s3Client.send(command);
   return `https://<public-domain>/${folderName}/${fileName}`;
+}
+
+export async function deleteFile(fileKey: string) {
+  const command = new DeleteObjectCommand({
+    Bucket: R2_BUCKET,
+    Key: fileKey,
+  });
+
+  await s3Client.send(command);
 }
