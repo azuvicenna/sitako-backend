@@ -13,11 +13,11 @@ export async function withCacheAndPagination<T>(
   const cachedData = await redisClient.get(cacheKey);
 
   if (cachedData) {
-    logger.info(`Cache hit: Mengambil data dari Redis untuk key ${cacheKey}`);
+    logger.debug(`Cache hit: ${cacheKey}`);
     return JSON.parse(cachedData);
   }
 
-  logger.info(`Cache miss: Mengambil data dari Database untuk key ${cacheKey}`);
+  logger.debug(`Cache miss: ${cacheKey}`);
 
   const offset = (page - 1) * limit;
   const { data, total } = await fetchData(offset, limit);
@@ -36,7 +36,6 @@ export async function withCacheAndPagination<T>(
   };
 
   await redisClient.setEx(cacheKey, 60, JSON.stringify(result));
-  logger.info(`Data baru berhasil disimpan ke Redis untuk key ${cacheKey}`);
 
   return result;
 }

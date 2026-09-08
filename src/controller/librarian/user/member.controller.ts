@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import * as memberRepository from "@/repositories/librarian/user/member.repository";
-import logger from "@/utils/core/logger";
 import {
   getPaginationParams,
   sendError,
@@ -12,8 +11,6 @@ export const getMemberHandler = async (req: Request, res: Response) => {
     const statusActive = req.params.statusActive as string;
 
     if (!statusActive || !["Semua", "true", "false"].includes(statusActive)) {
-      logger.warn(`Status aktif tidak valid - ${statusActive}`);
-
       return res.status(400).json({
         success: false,
         message: "Status aktif tidak valid",
@@ -27,10 +24,6 @@ export const getMemberHandler = async (req: Request, res: Response) => {
       page,
       limit,
       search,
-    );
-
-    logger.info(
-      `Memproses request data anggota: status_aktif=${statusActive}, search=${search}, page=${page}`,
     );
 
     return sendSuccess(res, result);

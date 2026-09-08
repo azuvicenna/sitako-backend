@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import * as stackRepository from "@/repositories/librarian/shelf/stack.repository";
-import logger from "@/utils/core/logger";
 import {
   getPaginationParams,
   sendError,
@@ -12,8 +11,6 @@ export const getStackHandler = async (req: Request, res: Response) => {
     const shelfId = req.params.id as string;
 
     if (!shelfId) {
-      logger.warn("Pencarian gagal: Parameter rak id kosong");
-
       return res.status(404).json({
         success: false,
         message: "Data not found",
@@ -27,10 +24,6 @@ export const getStackHandler = async (req: Request, res: Response) => {
       page,
       limit,
       search,
-    );
-
-    logger.info(
-      `Memproses request data susunan rak: rak_id=${shelfId}, search=${search}, page=${page}`,
     );
 
     return sendSuccess(res, result);

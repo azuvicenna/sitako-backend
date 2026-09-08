@@ -1,14 +1,18 @@
 import app from "./app";
 import { connectRedis } from "./config/redis";
+import logger from "./utils/core/logger";
 
 const PORT = 3000;
 
 app.listen(PORT, async () => {
   try {
     await connectRedis();
+    logger.info("Connected to Redis successfully");
   } catch (error) {
-    console.error("Failed to connect to Redis:", error);
+    logger.error(
+      `Failed to connect to Redis: ${error instanceof Error ? error.message : "Unknown Error"}`,
+    );
   }
 
-  console.log(`Server running on http://localhost:${PORT}`);
+  logger.info(`Server running on http://localhost:${PORT}`);
 });

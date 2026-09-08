@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import * as transactionRepository from "@/repositories/librarian/transaction/transaction.repository";
 import { transactionStatusEnum } from "@/db/schema";
-import logger from "@/utils/core/logger";
 import {
   getPaginationParams,
   sendError,
@@ -17,10 +16,6 @@ export const getTransactionHandler = async (req: Request, res: Response) => {
       (status !== "Semua" &&
         !transactionStatusEnum.enumValues.includes(status as any))
     ) {
-      logger.warn(
-        `Pencarian gagal: Parameter atau tipe transaksi tidak valid - ${status}`,
-      );
-
       return res.status(400).json({
         success: false,
         message: "Status transaksi tidak valid",
@@ -34,10 +29,6 @@ export const getTransactionHandler = async (req: Request, res: Response) => {
       page,
       limit,
       search,
-    );
-
-    logger.info(
-      `Memproses request data transaksi: status=${status}, search=${search}, page=${page}`,
     );
 
     return sendSuccess(res, result);
