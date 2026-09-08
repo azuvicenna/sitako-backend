@@ -12,6 +12,9 @@ export const createLibrarianSchema = z.object({
     .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, {
       message: "Format email tidak valid",
     }),
+  password: z
+    .string({ message: "Password wajib diisi" })
+    .min(1, { message: "Password tidak boleh kosong" }),
   telepon: z
     .string({ message: "Nomor telepon wajib diisi" })
     .min(1, { message: "Nomor telepon tidak boleh kosong" }),

@@ -1,5 +1,6 @@
 import { Router } from "express";
 
+import authRoutes from "./auth";
 import bookRoutes from "./librarian-routes/book";
 import shelfRoutes from "./librarian-routes/shelf";
 import librarianRoutes from "./librarian-routes/librarian";
@@ -8,6 +9,9 @@ import finePaymentRoutes from "./librarian-routes/fine-payment";
 import transactionRoutes from "./librarian-routes/transaction";
 
 const router = Router();
+
+// auth routes
+router.use("/auth", authRoutes);
 
 // librarian routes
 router.use("/books", bookRoutes);

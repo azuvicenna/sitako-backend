@@ -53,3 +53,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Merestruktur isi folder utils agar terkategori (auth, core, data, generators, services)
 - Merestruktur isi folder controller, repository, dan routes agar berorientasi role user
 - Menambahkan import alias menggunakan "@/" untuk menghindari path import yang panjang
+
+## [1.1.0] - 2026-09-08
+
+### Added
+- Menambahkan auth dengan jsonwebtoken dengan HTTP-only cookies

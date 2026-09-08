@@ -2,8 +2,8 @@ import { z } from "zod";
 
 export const createMemberSchema = z.object({
   nama: z
-    .string({ message: "Nama pustakawan wajib diisi" })
-    .min(1, { message: "Nama pustakawan tidak boleh kosong" }),
+    .string({ message: "Nama anggota wajib diisi" })
+    .min(1, { message: "Nama anggota tidak boleh kosong" }),
   nis: z
     .string({ message: "NIS wajib diisi" })
     .min(1, { message: "NIS tidak boleh kosong" }),
@@ -12,6 +12,9 @@ export const createMemberSchema = z.object({
     .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, {
       message: "Format email tidak valid",
     }),
+  password: z
+    .string({ message: "Password wajib diisi" })
+    .min(1, { message: "Password tidak boleh kosong" }),
   telepon: z
     .string({ message: "Nomor telepon wajib diisi" })
     .min(1, { message: "Nomor telepon tidak boleh kosong" }),
