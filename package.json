@@ -1,7 +1,7 @@
 {
   "name": "sitako",
   "version": "1.0.0",
-  "description": "",
+  "description": "Sistem Informasi Perpustakaan Sekolah (SITAKO) Backend",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
