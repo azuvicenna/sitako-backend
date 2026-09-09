@@ -1,12 +1,12 @@
 import { Router } from "express";
 
-import authRoutes from "./auth";
-import bookRoutes from "./librarian-routes/book";
-import shelfRoutes from "./librarian-routes/shelf";
-import librarianRoutes from "./librarian-routes/librarian";
-import memberRoutes from "./librarian-routes/member";
-import finePaymentRoutes from "./librarian-routes/fine-payment";
-import transactionRoutes from "./librarian-routes/transaction";
+import authRoutes from "./auth/auth";
+import bookRoutes from "./librarian/book";
+import shelfRoutes from "./librarian/shelf";
+import librarianRoutes from "./librarian/librarian";
+import memberRoutes from "./librarian/member";
+import finePaymentRoutes from "./librarian/fine-payment";
+import transactionRoutes from "./librarian/transaction";
 
 const router = Router();
 

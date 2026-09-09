@@ -32,6 +32,7 @@ Berikut adalah rincian fungsi dari masing-masing dependencies utama yang terdaft
 - **`svg-captcha`**: Untuk menghasilkan gambar captcha berbasis SVG (biasanya untuk keamanan form login/register).
 - **`typst`**: Package wrapper untuk menjalankan engine compiler Typst dari dalam Node.js.
 - **`ulid`**: Generator unique identifier berbasis waktu yang berurutan secara leksikografis (alternatif UUID).
+- **`uuid`**: Generator unique identifier untuk penamaan file upload.
 - **`winston`**: Library logging yang fleksibel dan powerful untuk mencatat aktivitas atau error aplikasi.
 - **`xlsx`**: Library untuk membaca, menulis, dan memanipulasi file spreadsheet Excel (.xlsx/.xls).
 - **`zod`**: Library validasi skema berbasis TypeScript yang ketat untuk data input/request.
