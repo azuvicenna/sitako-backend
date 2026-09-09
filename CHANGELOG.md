@@ -70,6 +70,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Menambahkan CRUD pada modul fine, fine-payment, transaction, stack, dan shelf
 - Menambahkan GET summary, transaction today, dan statistics untuk dashboard pustakawan
 - Menambahkan get dan update profile untuk anggota dan pustakawan
+- Menambahkan fitur logout
 
 ### Change
 - Menyusun ulang arsitektur pada modul controllers, services, repositories, dan routes

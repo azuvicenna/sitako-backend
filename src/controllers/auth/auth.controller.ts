@@ -58,3 +58,13 @@ export const login = async (req: Request, res: Response) => {
     return sendError(res, error, "login");
   }
 };
+
+export const logout = async (req: Request, res: Response) => {
+  try {
+    res.clearCookie("token");
+
+    return sendSuccess(res, null, "Logout berhasil");
+  } catch (error) {
+    return sendError(res, error, "logout");
+  }
+};
