@@ -13,8 +13,11 @@ import {
   updateBookSchema,
 } from "@/validations/librarian/book.schema";
 import { paginationSchema } from "@/validations/utils/pagination.schema";
+import { verifyAuth } from "@/middlewares/auth";
 
 const router = Router();
+
+router.use(verifyAuth);
 
 const bookUpload = upload.fields([
   { name: "cover", maxCount: 1 },
