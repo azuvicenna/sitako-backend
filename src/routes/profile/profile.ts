@@ -3,7 +3,7 @@ import {
   getMyProfile,
   updateMyProfile,
 } from "@/controllers/profile/profile.controller";
-import { verifyAuth } from "@/middlewares/auth";
+import { verifyAuth } from "@/middlewares/auth.middleware";
 
 const router = Router();
 

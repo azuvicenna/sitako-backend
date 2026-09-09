@@ -6,14 +6,14 @@ import {
   updateMember,
   deleteMember,
 } from "@/controllers/librarian/member.controller";
-import { validate } from "@/middlewares/validate";
+import { validate } from "@/middlewares/validate.middleware";
 import { paginationSchema } from "@/validations/utils/pagination.schema";
 import {
   createMemberSchema,
   updateMemberSchema,
 } from "@/validations/librarian/member.schema";
-import { verifyAuth } from "@/middlewares/auth";
-import { upload } from "@/middlewares/upload";
+import { verifyAuth } from "@/middlewares/auth.middleware";
+import { upload } from "@/middlewares/upload.middleware";
 
 const router = Router();
 

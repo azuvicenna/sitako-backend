@@ -6,9 +6,9 @@ import {
   showFine,
   updateFine,
 } from "@/controllers/librarian/fine.controller";
-import { validate } from "@/middlewares/validate";
+import { validate } from "@/middlewares/validate.middleware";
 import { paginationSchema } from "@/validations/utils/pagination.schema";
-import { verifyAuth } from "@/middlewares/auth";
+import { verifyAuth } from "@/middlewares/auth.middleware";
 import {
   createFineSchema,
   updateFineSchema,

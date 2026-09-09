@@ -4,8 +4,8 @@ import {
   getTodayTransactions,
   getWeeklyStatistics,
 } from "@/controllers/librarian/dashboard.controller";
-import { verifyAuth } from "@/middlewares/auth";
-import { validate } from "@/middlewares/validate";
+import { verifyAuth } from "@/middlewares/auth.middleware";
+import { validate } from "@/middlewares/validate.middleware";
 import { paginationSchema } from "@/validations/utils/pagination.schema";
 
 const router = Router();

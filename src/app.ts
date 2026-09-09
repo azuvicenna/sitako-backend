@@ -1,7 +1,7 @@
 import cookieParser from "cookie-parser";
 import express from "express";
 import routes from "./routes";
-import { requestLogger } from "./middlewares/request-logger";
+import { requestLogger } from "./middlewares/request-logger.middleware";
 
 const app = express();
 

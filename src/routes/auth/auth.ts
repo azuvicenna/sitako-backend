@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { getCaptcha, login, logout } from "@/controllers/auth/auth.controller";
-import { validate } from "@/middlewares/validate";
+import { validate } from "@/middlewares/validate.middleware";
 import { loginSchema } from "@/validations/auth/auth.schema";
-import { verifyAuth } from "@/middlewares/auth";
+import { verifyAuth } from "@/middlewares/auth.middleware";
 
 const router = Router();
 

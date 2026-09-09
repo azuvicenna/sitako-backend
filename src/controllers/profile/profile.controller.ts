@@ -1,5 +1,5 @@
 import { sendError, sendSuccess } from "@/utils/core/handler";
-import { Request, Response } from "express";
+import { Response } from "express";
 import * as librarianService from "@/services/librarian/librarian.service";
 import * as memberService from "@/services/librarian/member.service";
 import {
@@ -7,13 +7,7 @@ import {
   updateLibrarianSchema,
 } from "@/validations/librarian/librarian.schema";
 import { updateMemberSchema } from "@/validations/librarian/member.schema";
-
-export interface AuthRequest extends Request {
-  user?: {
-    id: string;
-    role: string;
-  };
-}
+import { AuthRequest } from "@/middlewares/auth.middleware";
 
 export const getMyProfile = async (req: AuthRequest, res: Response) => {
   try {

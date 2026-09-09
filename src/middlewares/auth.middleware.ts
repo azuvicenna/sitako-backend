@@ -2,7 +2,10 @@ import { Request, Response, NextFunction } from "express";
 import { verifyToken } from "@/utils/auth/jwt";
 
 export interface AuthRequest extends Request {
-  user?: any;
+  user?: {
+    id: string;
+    role: string;
+  };
 }
 
 export const verifyAuth = (
