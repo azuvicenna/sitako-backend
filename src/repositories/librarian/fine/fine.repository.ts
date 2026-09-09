@@ -1,7 +1,15 @@
-import { count, or, ilike, eq, sql, desc } from "drizzle-orm";
+import { count, eq, or, ilike, desc, sql } from "drizzle-orm";
 import { db } from "@/db";
-import { books, fines } from "@/db/schema";
+import { fines, books } from "@/db/schema";
 import { withCacheAndPagination } from "@/utils/data/repository";
+import { clearCacheByPattern } from "@/utils/core/clear-cache";
+
+export type FineInsert = typeof fines.$inferInsert;
+export type FineSelect = typeof fines.$inferSelect;
+
+const clearFineCache = async () => {
+  await clearCacheByPattern(`fine:*`);
+};
 
 export async function findFinesWithPagination(
   page: number = 1,
@@ -51,3 +59,51 @@ export async function findFinesWithPagination(
     },
   );
 }
+
+export async function findFine(id: string): Promise<FineSelect | null> {
+  const result = await db.select().from(fines).where(eq(fines.id, id)).limit(1);
+  return result[0] || null;
+}
+
+export const insertFine = async (data: FineInsert): Promise<FineSelect> => {
+  const result = await db.insert(fines).values(data).returning();
+  const created = result[0];
+
+  if (created) {
+    await clearFineCache();
+  }
+
+  return created;
+};
+
+export const updateFineById = async (
+  id: string,
+  data: Partial<FineInsert>,
+): Promise<FineSelect | null> => {
+  const result = await db
+    .update(fines)
+    .set(data)
+    .where(eq(fines.id, id))
+    .returning();
+
+  const updated = result[0] || null;
+
+  if (updated) {
+    await clearFineCache();
+  }
+
+  return updated;
+};
+
+export const removeFineById = async (
+  id: string,
+): Promise<FineSelect | null> => {
+  const result = await db.delete(fines).where(eq(fines.id, id)).returning();
+  const deleted = result[0] || null;
+
+  if (deleted) {
+    await clearFineCache();
+  }
+
+  return deleted;
+};

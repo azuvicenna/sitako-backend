@@ -1,15 +1,23 @@
-import { count, desc, or, ilike, sql, eq } from "drizzle-orm";
+import { count, eq, or, ilike, desc, sql } from "drizzle-orm";
 import { db } from "@/db";
 import {
-  books,
   finePayments,
   librarians,
   members,
   transactions,
+  books,
 } from "@/db/schema";
 import { withCacheAndPagination } from "@/utils/data/repository";
+import { clearCacheByPattern } from "@/utils/core/clear-cache";
 
-export async function findFinePaymentWithPagination(
+export type FinePaymentInsert = typeof finePayments.$inferInsert;
+export type FinePaymentSelect = typeof finePayments.$inferSelect;
+
+const clearFinePaymentCache = async () => {
+  await clearCacheByPattern(`fine-payment:*`);
+};
+
+export async function findFinePaymentsWithPagination(
   page: number = 1,
   limit: number = 10,
   search: string = "",
@@ -79,3 +87,62 @@ export async function findFinePaymentWithPagination(
     },
   );
 }
+
+export async function findFinePayment(
+  id: string,
+): Promise<FinePaymentSelect | null> {
+  const result = await db
+    .select()
+    .from(finePayments)
+    .where(eq(finePayments.id, id))
+    .limit(1);
+  return result[0] || null;
+}
+
+export const insertFinePayment = async (
+  data: FinePaymentInsert,
+): Promise<FinePaymentSelect> => {
+  const result = await db.insert(finePayments).values(data).returning();
+  const created = result[0];
+
+  if (created) {
+    await clearFinePaymentCache();
+  }
+
+  return created;
+};
+
+export const updateFinePaymentById = async (
+  id: string,
+  data: Partial<FinePaymentInsert>,
+): Promise<FinePaymentSelect | null> => {
+  const result = await db
+    .update(finePayments)
+    .set(data)
+    .where(eq(finePayments.id, id))
+    .returning();
+
+  const updated = result[0] || null;
+
+  if (updated) {
+    await clearFinePaymentCache();
+  }
+
+  return updated;
+};
+
+export const removeFinePaymentById = async (
+  id: string,
+): Promise<FinePaymentSelect | null> => {
+  const result = await db
+    .delete(finePayments)
+    .where(eq(finePayments.id, id))
+    .returning();
+  const deleted = result[0] || null;
+
+  if (deleted) {
+    await clearFinePaymentCache();
+  }
+
+  return deleted;
+};

@@ -1,7 +1,15 @@
-import { count, eq, desc, and, ilike, or } from "drizzle-orm";
+import { count, eq, ilike, desc, and, or } from "drizzle-orm";
 import { db } from "@/db";
-import { books, librarians, members, transactions } from "@/db/schema";
+import { transactions, members, librarians, books } from "@/db/schema";
 import { withCacheAndPagination } from "@/utils/data/repository";
+import { clearCacheByPattern } from "@/utils/core/clear-cache";
+
+export type TransactionInsert = typeof transactions.$inferInsert;
+export type TransactionSelect = typeof transactions.$inferSelect;
+
+const clearTransactionCache = async () => {
+  await clearCacheByPattern(`transaction:*`);
+};
 
 export async function findTransactionsWithPagination(
   status: string,
@@ -63,3 +71,62 @@ export async function findTransactionsWithPagination(
     },
   );
 }
+
+export async function findTransaction(
+  id: string,
+): Promise<TransactionSelect | null> {
+  const result = await db
+    .select()
+    .from(transactions)
+    .where(eq(transactions.id, id))
+    .limit(1);
+  return result[0] || null;
+}
+
+export const insertTransaction = async (
+  data: TransactionInsert,
+): Promise<TransactionSelect> => {
+  const result = await db.insert(transactions).values(data).returning();
+  const created = result[0];
+
+  if (created) {
+    await clearTransactionCache();
+  }
+
+  return created;
+};
+
+export const updateTransactionById = async (
+  id: string,
+  data: Partial<TransactionInsert>,
+): Promise<TransactionSelect | null> => {
+  const result = await db
+    .update(transactions)
+    .set(data)
+    .where(eq(transactions.id, id))
+    .returning();
+
+  const updated = result[0] || null;
+
+  if (updated) {
+    await clearTransactionCache();
+  }
+
+  return updated;
+};
+
+export const removeTransactionById = async (
+  id: string,
+): Promise<TransactionSelect | null> => {
+  const result = await db
+    .delete(transactions)
+    .where(eq(transactions.id, id))
+    .returning();
+  const deleted = result[0] || null;
+
+  if (deleted) {
+    await clearTransactionCache();
+  }
+
+  return deleted;
+};

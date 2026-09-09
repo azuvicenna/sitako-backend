@@ -1,7 +1,15 @@
-import { count, eq, asc, and, or, ilike, sql } from "drizzle-orm";
+import { count, eq, ilike, and, sql, or, asc } from "drizzle-orm";
 import { db } from "@/db";
-import { books, stacks } from "@/db/schema";
+import { stacks, books } from "@/db/schema";
 import { withCacheAndPagination } from "@/utils/data/repository";
+import { clearCacheByPattern } from "@/utils/core/clear-cache";
+
+export type StackInsert = typeof stacks.$inferInsert;
+export type StackSelect = typeof stacks.$inferSelect;
+
+const clearStackCache = async () => {
+  await clearCacheByPattern(`stack:*`);
+};
 
 export async function findStacksWithPagination(
   shelfId: string,
@@ -9,7 +17,7 @@ export async function findStacksWithPagination(
   limit: number = 10,
   search: string = "",
 ) {
-  const cacheKey = `stack:search:${search}:shelf:${shelfId}:page:${page}:limit:${limit}`;
+  const cacheKey = `stack:${shelfId}:search:${search}:shelf:${shelfId}:page:${page}:limit:${limit}`;
 
   return withCacheAndPagination(
     cacheKey,
@@ -54,3 +62,55 @@ export async function findStacksWithPagination(
     },
   );
 }
+
+export async function findStack(id: string): Promise<StackSelect | null> {
+  const result = await db
+    .select()
+    .from(stacks)
+    .where(eq(stacks.id, id))
+    .limit(1);
+  return result[0] || null;
+}
+
+export const insertStack = async (data: StackInsert): Promise<StackSelect> => {
+  const result = await db.insert(stacks).values(data).returning();
+  const created = result[0];
+
+  if (created) {
+    await clearStackCache();
+  }
+
+  return created;
+};
+
+export const updateStackById = async (
+  id: string,
+  data: Partial<StackInsert>,
+): Promise<StackSelect | null> => {
+  const result = await db
+    .update(stacks)
+    .set(data)
+    .where(eq(stacks.id, id))
+    .returning();
+
+  const updated = result[0] || null;
+
+  if (updated) {
+    await clearStackCache();
+  }
+
+  return updated;
+};
+
+export const removeStackById = async (
+  id: string,
+): Promise<StackSelect | null> => {
+  const result = await db.delete(stacks).where(eq(stacks.id, id)).returning();
+  const deleted = result[0] || null;
+
+  if (deleted) {
+    await clearStackCache();
+  }
+
+  return deleted;
+};

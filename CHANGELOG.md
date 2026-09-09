@@ -63,3 +63,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Change
 - Menghapus kode logger yang overuse, sekarang logger difokuskan untuk mencatat error kritis pada catch
+
+## [1.1.0] - 2026-09-09
+
+### Added
+- Menambahkan CRUD pada modul fine, fine-payment, transaction, stack, dan shelf
