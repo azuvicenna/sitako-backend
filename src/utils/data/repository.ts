@@ -1,6 +1,26 @@
 import redisClient from "@/config/redis";
 import logger from "@/utils/core/logger";
 
+export const withCache = async <T>(
+  cacheKey: string,
+  ttlSeconds: number,
+  fetcher: () => Promise<T>,
+): Promise<T> => {
+  const cached = await redisClient.get(cacheKey);
+  
+  if (cached) {
+    logger.debug(`Cache hit: ${cacheKey}`);
+    return JSON.parse(cached);
+  }
+
+  logger.debug(`Cache miss: ${cacheKey}`);
+  
+  const data = await fetcher();
+  await redisClient.setEx(cacheKey, ttlSeconds, JSON.stringify(data));
+  
+  return data;
+};
+
 export async function withCacheAndPagination<T>(
   cacheKey: string,
   page: number,
