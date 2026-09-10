@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const METODE_PEMBAYARAN = ["Tunai", "Non-Tunai"] as const;
+import { paymentMethodEnum } from "@/db/schema";
 
 export const createFinePaymentSchema = z.object({
   pustakawanId: z
@@ -24,7 +24,7 @@ export const createFinePaymentSchema = z.object({
     .date({ message: "Format tanggal bayar tidak valid" })
     .optional(),
   metodePembayaran: z
-    .enum(METODE_PEMBAYARAN, { message: "Metode pembayaran tidak valid" })
+    .enum(paymentMethodEnum.enumValues, { message: "Metode pembayaran tidak valid" })
     .default("Tunai"),
 });
 

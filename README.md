@@ -23,6 +23,8 @@ Berikut adalah rincian fungsi dari masing-masing dependencies utama yang terdaft
 - **`@aws-sdk/client-s3`**: Library official AWS SDK untuk berinteraksi dengan S3-compatible storage (digunakan untuk Cloudflare R2).
 - **`bcrypt`**: Digunakan untuk melakukan _hashing_ password pengguna agar aman di database.
 - **`cookie-parser`**: Middleware Express untuk memparsing cookie dari header HTTP.
+- **`cors`**: Middleware keamanan untuk mengatur kebijakan Cross-Origin Resource Sharing agar frontend bisa mengakses API.
+- **`helmet`**: Middleware keamanan untuk menyembunyikan dan mengamankan HTTP headers dasar (menangkal serangan XSS, sniffing, dsb).
 - **`drizzle-orm`**: TypeScript ORM yang ringan dan cepat untuk berinteraksi dengan database PostgreSQL.
 - **`express`**: Framework web minimalis untuk membangun RESTful API di Node.js.
 - **`jsonwebtoken`**: Untuk membuat dan memverifikasi JSON Web Token (JWT) untuk sistem otentikasi.
@@ -47,7 +49,7 @@ Langkah pertama sebelum menjalankan aplikasi secara lokal:
    ```bash
    cp .env.example .env
    ```
-2. Sesuaikan nilai di dalam `.env` dengan kredensial database, Redis, S3 (Cloudflare R2), dan pengaturan mailer.
+2. Sesuaikan nilai di dalam `.env` dengan kredensial database, Redis, pengaturan mailer, dan S3 (termasuk `PUBLIC_STORAGE_URL` untuk akses gambar publik dari Cloudflare R2).
 3. Install semua dependencies:
    ```bash
    npm install

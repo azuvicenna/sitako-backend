@@ -69,7 +69,7 @@ export const showTransaction = async (req: Request, res: Response) => {
 
 export const createTransaction = async (req: Request, res: Response) => {
   try {
-    const validatedBody = createTransactionSchema.parse(req.body);
+    const validatedBody = req.body;
     const result = await transactionService.createNewTransaction(validatedBody);
 
     return sendSuccess(res, result, "Transaksi berhasil dibuat");
@@ -89,7 +89,7 @@ export const updateTransaction = async (req: Request, res: Response) => {
       });
     }
 
-    const validatedBody = updateTransactionSchema.parse(req.body);
+    const validatedBody = req.body;
     const result = await transactionService.updateExistingTransaction(
       transactionId,
       validatedBody,

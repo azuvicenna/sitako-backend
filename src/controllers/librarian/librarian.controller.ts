@@ -65,7 +65,7 @@ export const showLibrarian = async (req: Request, res: Response) => {
 
 export const createLibrarian = async (req: Request, res: Response) => {
   try {
-    const validatedBody = createLibrarianSchema.parse(req.body);
+    const validatedBody = req.body;
     const validatedFile = imageFileSchema.parse(req.file);
 
     const result = await librarianService.createNewLibrarian(
@@ -90,7 +90,7 @@ export const updateLibrarian = async (req: Request, res: Response) => {
       });
     }
 
-    const validatedBody = updateLibrarianSchema.parse(req.body);
+    const validatedBody = req.body;
     const validatedFile = req.file
       ? imageFileSchema.parse(req.file)
       : undefined;

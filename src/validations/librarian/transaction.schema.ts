@@ -1,14 +1,6 @@
 import { z } from "zod";
 
-const STATUS_TRANSAKSI = [
-  "Menunggu Persetujuan",
-  "Dibatalkan",
-  "Menunggu Diambil",
-  "Dipinjam",
-  "Dikembalikan",
-  "Terlambat",
-  "Tidak Mengembalikan",
-] as const;
+import { transactionStatusEnum } from "@/db/schema";
 
 export const createTransactionSchema = z.object({
   bukuId: z
@@ -27,7 +19,7 @@ export const createTransactionSchema = z.object({
     .date({ message: "Format tanggal kembali tidak valid" })
     .optional(),
   status: z
-    .enum(STATUS_TRANSAKSI, { message: "Status transaksi tidak valid" })
+    .enum(transactionStatusEnum.enumValues, { message: "Status transaksi tidak valid" })
     .default("Menunggu Persetujuan"),
 });
 

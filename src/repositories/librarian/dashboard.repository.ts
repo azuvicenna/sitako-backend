@@ -2,6 +2,16 @@ import { db } from "@/db";
 import { books, members, transactions } from "@/db/schema";
 import { eq, sql, gte, lte, and } from "drizzle-orm";
 import { withCache, withCacheAndPagination } from "@/utils/data/repository";
+import { clearCacheByPattern } from "@/utils/core/clear-cache";
+
+export const invalidateDashboardCache = async () => {
+  await clearCacheByPattern([
+    "dashboard:summary",
+    "dashboard:trx:summary",
+    "dashboard:trx:table:*",
+    "dashboard:statistics:weekly",
+  ]);
+};
 
 export const getDashboardSummaryRepo = async () => {
   return withCache("dashboard:summary", 300, async () => {
@@ -60,7 +70,7 @@ export const getTodayTransactionsRepo = async (
       ];
 
       if (status && status !== "Semua") {
-        baseConditions.push(eq(transactions.status, status as any));
+        baseConditions.push(eq(transactions.status, status as typeof transactions.$inferSelect["status"]));
       }
 
       const whereClause = and(...baseConditions);

@@ -29,13 +29,13 @@ const router = Router();
 
 router.use(verifyAuth);
 
-router.get("/", validate(paginationSchema), getShelvesHandler);
+router.get("/", validate(paginationSchema, "query"), getShelvesHandler);
 router.get("/detail/:id", showShelf);
 router.post("/", validate(createShelfSchema), createShelf);
 router.put("/:id", validate(updateShelfSchema), updateShelf);
 router.delete("/:id", deleteShelf);
 
-router.get("/:shelfId/stacks", validate(paginationSchema), getStacksHandler);
+router.get("/:shelfId/stacks", validate(paginationSchema, "query"), getStacksHandler);
 router.get("/:shelfId/stacks/detail/:id", showStack);
 router.post("/:shelfId/stacks/", validate(createStackSchema), createStack);
 router.put("/:shelfId/stacks/:id", validate(updateStackSchema), updateStack);

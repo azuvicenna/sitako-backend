@@ -9,6 +9,7 @@ import {
 } from "@/repositories/librarian/book.repository";
 import { deleteFile, uploadFile } from "@/utils/services/file-upload";
 import { CreateBook, UpdateBook } from "@/validations/librarian/book.schema";
+import logger from "@/utils/core/logger";
 
 const extractFileKey = (url: string) => url.split("/").slice(-2).join("/");
 
@@ -46,12 +47,32 @@ export const createNewBook = async (
 
   const bookData: BookInsert = {
     ...payload,
-    tipeBuku: (payload.tipeBuku || bookTypeParam) as any,
+    tipeBuku: (payload.tipeBuku || bookTypeParam) as NonNullable<
+      BookInsert["tipeBuku"]
+    >,
     cover,
     file,
   };
 
-  return await insertBook(bookData);
+  try {
+    return await insertBook(bookData);
+  } catch (error) {
+    if (cover) {
+      await deleteFile(extractFileKey(cover)).catch((err) =>
+        logger.error(
+          `Failed to delete orphaned cover file ${cover}: ${err.message}`,
+        ),
+      );
+    }
+    if (file) {
+      await deleteFile(extractFileKey(file)).catch((err) =>
+        logger.error(
+          `Failed to delete orphaned book file ${file}: ${err.message}`,
+        ),
+      );
+    }
+    throw error;
+  }
 };
 
 export const updateExistingBook = async (
@@ -63,7 +84,7 @@ export const updateExistingBook = async (
   const existingBook = await findBook(id);
   if (!existingBook) return null;
 
-  const updateData: Partial<BookInsert> = { ...payload } as any;
+  const updateData = { ...payload } as Partial<BookInsert>;
 
   if (coverFile) {
     const ext = coverFile.originalname.split(".").pop();
@@ -72,23 +93,13 @@ export const updateExistingBook = async (
       coverFile,
       `${uuidv4()}.${ext}`,
     );
-
-    if (existingBook.cover) {
-      await deleteFile(extractFileKey(existingBook.cover)).catch(console.error);
-    }
   }
 
   if (pdfFile) {
     const ext = pdfFile.originalname.split(".").pop();
     updateData.file = await uploadFile("books", pdfFile, `${uuidv4()}.${ext}`);
-
-    if (existingBook.file) {
-      await deleteFile(extractFileKey(existingBook.file)).catch(console.error);
-    }
   }
-
   if (payload.tipeBuku === "Fisik" && existingBook.file && !pdfFile) {
-    await deleteFile(extractFileKey(existingBook.file)).catch(console.error);
     updateData.file = null;
   }
 
@@ -96,7 +107,41 @@ export const updateExistingBook = async (
     return existingBook;
   }
 
-  return await updateBookById(id, updateData);
+  try {
+    const updated = await updateBookById(id, updateData);
+
+    if (coverFile && existingBook.cover) {
+      await deleteFile(extractFileKey(existingBook.cover)).catch((err) =>
+        logger.error(`Failed to delete old cover file: ${err.message}`),
+      );
+    }
+
+    if (pdfFile && existingBook.file) {
+      await deleteFile(extractFileKey(existingBook.file)).catch((err) =>
+        logger.error(`Failed to delete old book file: ${err.message}`),
+      );
+    }
+
+    if (payload.tipeBuku === "Fisik" && existingBook.file && !pdfFile) {
+      await deleteFile(extractFileKey(existingBook.file)).catch((err) =>
+        logger.error(`Failed to delete old physical book file: ${err.message}`),
+      );
+    }
+
+    return updated;
+  } catch (error) {
+    if (coverFile && updateData.cover) {
+      await deleteFile(extractFileKey(updateData.cover)).catch((err) =>
+        logger.error(`Failed to delete orphaned cover file: ${err.message}`),
+      );
+    }
+    if (pdfFile && updateData.file) {
+      await deleteFile(extractFileKey(updateData.file)).catch((err) =>
+        logger.error(`Failed to delete orphaned book file: ${err.message}`),
+      );
+    }
+    throw error;
+  }
 };
 
 export const deleteExistingBook = async (id: string) => {
@@ -107,11 +152,15 @@ export const deleteExistingBook = async (id: string) => {
 
   if (deletedBook) {
     if (book.cover) {
-      await deleteFile(extractFileKey(book.cover)).catch(console.error);
+      await deleteFile(extractFileKey(book.cover)).catch((err) =>
+        logger.error(`Failed to delete cover file on delete: ${err.message}`),
+      );
     }
 
     if (book.file) {
-      await deleteFile(extractFileKey(book.file)).catch(console.error);
+      await deleteFile(extractFileKey(book.file)).catch((err) =>
+        logger.error(`Failed to delete book file on delete: ${err.message}`),
+      );
     }
   }
 

@@ -65,7 +65,7 @@ export const showMember = async (req: Request, res: Response) => {
 
 export const createMember = async (req: Request, res: Response) => {
   try {
-    const validatedBody = createMemberSchema.parse(req.body);
+    const validatedBody = req.body;
     const validatedFile = imageFileSchema.parse(req.file);
 
     const result = await memberService.createNewMember(
@@ -90,7 +90,7 @@ export const updateMember = async (req: Request, res: Response) => {
       });
     }
 
-    const validatedBody = updateMemberSchema.parse(req.body);
+    const validatedBody = req.body;
     const validatedFile = req.file
       ? imageFileSchema.parse(req.file)
       : undefined;

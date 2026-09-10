@@ -10,6 +10,7 @@ import {
 } from "@/repositories/librarian/member.repository";
 import { deleteFile, uploadFile } from "@/utils/services/file-upload";
 import { UpdateMember } from "@/validations/librarian/member.schema";
+import logger from "@/utils/core/logger";
 
 const extractFileKey = (url: string) => url.split("/").slice(-2).join("/");
 
@@ -52,9 +53,20 @@ export const createNewMember = async (
         : true,
   };
 
-  const created = await insertMember(memberData);
-  const { password, ...resultWithoutPassword } = created;
-  return resultWithoutPassword;
+  try {
+    const created = await insertMember(memberData);
+    const { password, ...resultWithoutPassword } = created;
+    return resultWithoutPassword;
+  } catch (error) {
+    if (fotoUrl) {
+      await deleteFile(extractFileKey(fotoUrl)).catch((err) =>
+        logger.error(
+          `Failed to delete orphaned file ${fotoUrl}: ${err.message}`,
+        ),
+      );
+    }
+    throw error;
+  }
 };
 
 export const updateExistingMember = async (
@@ -78,23 +90,34 @@ export const updateExistingMember = async (
       fotoFile,
       `${uuidv4()}.${ext}`,
     );
-
-    if (existingMember.foto) {
-      await deleteFile(extractFileKey(existingMember.foto)).catch(
-        console.error,
-      );
-    }
   }
 
   if (Object.keys(updateData).length === 0) {
     return existingMember;
   }
 
-  const updated = await updateMemberById(id, updateData);
-  if (!updated) return null;
+  try {
+    const updated = await updateMemberById(id, updateData);
+    if (!updated) return null;
 
-  const { password, ...resultWithoutPassword } = updated;
-  return resultWithoutPassword;
+    if (fotoFile && existingMember.foto) {
+      await deleteFile(extractFileKey(existingMember.foto)).catch((err) =>
+        logger.error(`Failed to delete old profile file: ${err.message}`),
+      );
+    }
+
+    const { password, ...resultWithoutPassword } = updated;
+    return resultWithoutPassword;
+  } catch (error) {
+    if (fotoFile && updateData.foto) {
+      await deleteFile(extractFileKey(updateData.foto)).catch((err) =>
+        logger.error(
+          `Failed to delete orphaned file ${updateData.foto}: ${err.message}`,
+        ),
+      );
+    }
+    throw error;
+  }
 };
 
 export const deleteExistingMember = async (id: string) => {
@@ -104,7 +127,9 @@ export const deleteExistingMember = async (id: string) => {
   const deleted = await removeMemberById(id);
 
   if (deleted && member.foto) {
-    await deleteFile(extractFileKey(member.foto)).catch(console.error);
+    await deleteFile(extractFileKey(member.foto)).catch((err) =>
+      logger.error(`Failed to delete profile file on delete: ${err.message}`),
+    );
   }
 
   return deleted;

@@ -3,6 +3,7 @@ import { db } from "@/db";
 import { books } from "@/db/schema";
 import { withCacheAndPagination } from "@/utils/data/repository";
 import { clearCacheByPattern } from "@/utils/core/clear-cache";
+import { invalidateDashboardCache } from "./dashboard.repository";
 
 export type BookInsert = typeof books.$inferInsert;
 export type BookSelect = typeof books.$inferSelect;
@@ -10,6 +11,7 @@ export type BookSelect = typeof books.$inferSelect;
 const clearBookCache = async (bookType?: string) => {
   const pattern = bookType ? `book:book-type:${bookType}:*` : `book:*`;
   await clearCacheByPattern(pattern);
+  await invalidateDashboardCache();
 };
 
 export async function findBooksWithPagination(
@@ -27,7 +29,7 @@ export async function findBooksWithPagination(
     async (offset, limit) => {
       const whereClause = search
         ? and(
-            eq(books.tipeBuku, bookType as any),
+            eq(books.tipeBuku, bookType as BookSelect["tipeBuku"]),
             or(
               ilike(books.judul, `%${search}%`),
               ilike(books.penulis, `%${search}%`),
@@ -35,7 +37,7 @@ export async function findBooksWithPagination(
               ilike(books.isbn, `%${search}%`),
             ),
           )
-        : eq(books.tipeBuku, bookType as any);
+        : eq(books.tipeBuku, bookType as BookSelect["tipeBuku"]);
 
       const [data, countResult] = await Promise.all([
         db

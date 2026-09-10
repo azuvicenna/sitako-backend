@@ -21,7 +21,7 @@ export const getShelfById = async (id: string) => {
 };
 
 export const createNewShelf = async (payload: CreateShelf) => {
-  const shelfData: ShelfInsert = { ...payload } as any;
+  const shelfData = { ...payload } as ShelfInsert;
   return await insertShelf(shelfData);
 };
 
@@ -33,7 +33,7 @@ export const updateExistingShelf = async (id: string, payload: UpdateShelf) => {
     return existingShelf;
   }
 
-  const updateData: Partial<ShelfInsert> = { ...payload } as any;
+  const updateData = { ...payload } as Partial<ShelfInsert>;
   return await updateShelfById(id, updateData);
 };
 

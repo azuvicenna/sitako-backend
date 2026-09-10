@@ -21,7 +21,7 @@ export const getFineById = async (id: string) => {
 };
 
 export const createNewFine = async (payload: CreateFine) => {
-  const fineData: FineInsert = { ...payload } as any;
+  const fineData = { ...payload } as FineInsert;
   return await insertFine(fineData);
 };
 
@@ -33,7 +33,7 @@ export const updateExistingFine = async (id: string, payload: UpdateFine) => {
     return existingFine;
   }
 
-  const updateData: Partial<FineInsert> = { ...payload } as any;
+  const updateData = { ...payload } as Partial<FineInsert>;
   return await updateFineById(id, updateData);
 };
 

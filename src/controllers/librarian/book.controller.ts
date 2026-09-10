@@ -86,7 +86,7 @@ export const createBook = async (req: Request, res: Response) => {
     const coverFile = files?.cover?.[0];
     const pdfFile = files?.file?.[0];
 
-    const validatedBody = createBookSchema.parse(req.body);
+    const validatedBody = req.body;
     const validatedCover = bookCoverSchema.parse(coverFile);
     const validatedPdf = pdfFile ? bookPdfSchema.parse(pdfFile) : undefined;
 
@@ -121,7 +121,7 @@ export const updateBook = async (req: Request, res: Response) => {
     const coverFile = files?.cover?.[0];
     const pdfFile = files?.file?.[0];
 
-    const validatedBody = updateBookSchema.parse(req.body);
+    const validatedBody = req.body;
     const validatedCover = coverFile
       ? bookCoverSchema.parse(coverFile)
       : undefined;

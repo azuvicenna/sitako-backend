@@ -15,7 +15,7 @@ router.use(verifyAuth);
 router.get("/summary", getSummary);
 router.get(
   "/transaction/today",
-  validate(paginationSchema),
+  validate(paginationSchema, "query"),
   getTodayTransactions,
 );
 router.get("/statistics", getWeeklyStatistics);

@@ -3,9 +3,11 @@ import { db } from "@/db";
 import { members } from "@/db/schema";
 import { withCacheAndPagination } from "@/utils/data/repository";
 import { clearCacheByPattern } from "@/utils/core/clear-cache";
+import { invalidateDashboardCache } from "./dashboard.repository";
 
 const clearMemberCache = async () => {
   await clearCacheByPattern("member:*");
+  await invalidateDashboardCache();
 };
 
 export async function findMembersWithPagination(

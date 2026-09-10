@@ -2,6 +2,7 @@ import redisClient from "@/config/redis";
 
 export async function clearCacheByPattern(pattern: string | string[]) {
   const patterns = Array.isArray(pattern) ? pattern : [pattern];
+  if (patterns.length === 0) return;
 
   await Promise.all(patterns.map((p) => clearSinglePattern(p)));
 }

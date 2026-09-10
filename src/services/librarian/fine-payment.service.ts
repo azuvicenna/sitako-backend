@@ -24,7 +24,7 @@ export const getFinePaymentById = async (id: string) => {
 };
 
 export const createNewFinePayment = async (payload: CreateFinePayment) => {
-  const paymentData: FinePaymentInsert = { ...payload } as any;
+  const paymentData = { ...payload } as FinePaymentInsert;
   return await insertFinePayment(paymentData);
 };
 
@@ -39,7 +39,7 @@ export const updateExistingFinePayment = async (
     return existingPayment;
   }
 
-  const updateData: Partial<FinePaymentInsert> = { ...payload } as any;
+  const updateData = { ...payload } as Partial<FinePaymentInsert>;
   return await updateFinePaymentById(id, updateData);
 };
 

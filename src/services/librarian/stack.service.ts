@@ -22,7 +22,7 @@ export const getStackById = async (id: string) => {
 };
 
 export const createNewStack = async (payload: CreateStack) => {
-  const stackData: StackInsert = { ...payload } as any;
+  const stackData = { ...payload } as StackInsert;
   return await insertStack(stackData);
 };
 
@@ -34,7 +34,7 @@ export const updateExistingStack = async (id: string, payload: UpdateStack) => {
     return existingStack;
   }
 
-  const updateData: Partial<StackInsert> = { ...payload } as any;
+  const updateData = { ...payload } as Partial<StackInsert>;
   return await updateStackById(id, updateData);
 };
 

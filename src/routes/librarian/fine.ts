@@ -18,7 +18,7 @@ const router = Router();
 
 router.use(verifyAuth);
 
-router.get("/", validate(paginationSchema), getFinesHandler);
+router.get("/", validate(paginationSchema, "query"), getFinesHandler);
 router.get("/detail/:id", showFine);
 router.post("/", validate(createFineSchema), createFine);
 router.put("/:id", validate(updateFineSchema), updateFine);

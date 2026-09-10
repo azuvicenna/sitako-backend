@@ -3,12 +3,14 @@ import { db } from "@/db";
 import { transactions, members, librarians, books } from "@/db/schema";
 import { withCacheAndPagination } from "@/utils/data/repository";
 import { clearCacheByPattern } from "@/utils/core/clear-cache";
+import { invalidateDashboardCache } from "./dashboard.repository";
 
 export type TransactionInsert = typeof transactions.$inferInsert;
 export type TransactionSelect = typeof transactions.$inferSelect;
 
 const clearTransactionCache = async () => {
   await clearCacheByPattern(`transaction:*`);
+  await invalidateDashboardCache();
 };
 
 export async function findTransactionsWithPagination(
@@ -34,7 +36,7 @@ export async function findTransactionsWithPagination(
         : undefined;
 
       const whereClause = and(
-        status === "Semua" ? undefined : eq(transactions.status, status as any),
+        status === "Semua" ? undefined : eq(transactions.status, status as TransactionSelect["status"]),
         searchCondition,
       );
 

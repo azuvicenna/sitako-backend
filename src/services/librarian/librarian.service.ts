@@ -10,6 +10,7 @@ import {
 } from "@/repositories/librarian/librarian.repository";
 import { deleteFile, uploadFile } from "@/utils/services/file-upload";
 import { UpdateLibrarian } from "@/validations/librarian/librarian.schema";
+import logger from "@/utils/core/logger";
 
 const extractFileKey = (url: string) => url.split("/").slice(-2).join("/");
 
@@ -52,9 +53,20 @@ export const createNewLibrarian = async (
         : true,
   };
 
-  const created = await insertLibrarian(librarianData);
-  const { password, ...resultWithoutPassword } = created;
-  return resultWithoutPassword;
+  try {
+    const created = await insertLibrarian(librarianData);
+    const { password, ...resultWithoutPassword } = created;
+    return resultWithoutPassword;
+  } catch (error) {
+    if (fotoUrl) {
+      await deleteFile(extractFileKey(fotoUrl)).catch((err) =>
+        logger.error(
+          `Failed to delete orphaned file ${fotoUrl}: ${err.message}`,
+        ),
+      );
+    }
+    throw error;
+  }
 };
 
 export const updateExistingLibrarian = async (
@@ -78,23 +90,34 @@ export const updateExistingLibrarian = async (
       fotoFile,
       `${uuidv4()}.${ext}`,
     );
-
-    if (existingLibrarian.foto) {
-      await deleteFile(extractFileKey(existingLibrarian.foto)).catch(
-        console.error,
-      );
-    }
   }
 
   if (Object.keys(updateData).length === 0) {
     return existingLibrarian;
   }
 
-  const updated = await updateLibrarianById(id, updateData);
-  if (!updated) return null;
+  try {
+    const updated = await updateLibrarianById(id, updateData);
+    if (!updated) return null;
 
-  const { password, ...resultWithoutPassword } = updated;
-  return resultWithoutPassword;
+    if (fotoFile && existingLibrarian.foto) {
+      await deleteFile(extractFileKey(existingLibrarian.foto)).catch((err) =>
+        logger.error(`Failed to delete old profile file: ${err.message}`),
+      );
+    }
+
+    const { password, ...resultWithoutPassword } = updated;
+    return resultWithoutPassword;
+  } catch (error) {
+    if (fotoFile && updateData.foto) {
+      await deleteFile(extractFileKey(updateData.foto)).catch((err) =>
+        logger.error(
+          `Failed to delete orphaned file ${updateData.foto}: ${err.message}`,
+        ),
+      );
+    }
+    throw error;
+  }
 };
 
 export const deleteExistingLibrarian = async (id: string) => {
@@ -104,7 +127,9 @@ export const deleteExistingLibrarian = async (id: string) => {
   const deleted = await removeLibrarianById(id);
 
   if (deleted && librarian.foto) {
-    await deleteFile(extractFileKey(librarian.foto)).catch(console.error);
+    await deleteFile(extractFileKey(librarian.foto)).catch((err) =>
+      logger.error(`Failed to delete profile file on delete: ${err.message}`),
+    );
   }
 
   return deleted;

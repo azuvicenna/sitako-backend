@@ -25,7 +25,7 @@ export const getTransactionById = async (id: string) => {
 };
 
 export const createNewTransaction = async (payload: CreateTransaction) => {
-  const transactionData: TransactionInsert = { ...payload } as any;
+  const transactionData = { ...payload } as TransactionInsert;
   return await insertTransaction(transactionData);
 };
 
@@ -40,7 +40,7 @@ export const updateExistingTransaction = async (
     return existingTransaction;
   }
 
-  const updateData: Partial<TransactionInsert> = { ...payload } as any;
+  const updateData = { ...payload } as Partial<TransactionInsert>;
   return await updateTransactionById(id, updateData);
 };
 

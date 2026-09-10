@@ -18,7 +18,7 @@ const router = Router();
 
 router.use(verifyAuth);
 
-router.get("/", validate(paginationSchema), getFinePaymentsHandler);
+router.get("/", validate(paginationSchema, "query"), getFinePaymentsHandler);
 router.get("/detail/:id", showFinePayment);
 router.post("/", validate(createFinePaymentSchema), createFinePayment);
 router.put("/:id", validate(updateFinePaymentSchema), updateFinePayment);

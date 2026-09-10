@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import logger from "@/utils/core/logger";
 
 const transporter = nodemailer.createTransport({
   host: process.env.MAIL_HOST,
@@ -20,7 +21,7 @@ export const sendEmail = async (to: string, subject: string, html: string) => {
     });
     return { success: true, messageId: info.messageId };
   } catch (error) {
-    console.error("Error sending email:", error);
+    logger.error("Error sending email:", { error });
     return { success: false, error };
   }
 };

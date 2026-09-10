@@ -64,7 +64,7 @@ export const showStack = async (req: Request, res: Response) => {
 
 export const createStack = async (req: Request, res: Response) => {
   try {
-    const validatedBody = createStackSchema.parse(req.body);
+    const validatedBody = req.body;
     const result = await stackService.createNewStack(validatedBody);
 
     return sendSuccess(res, result, "Susunan rak berhasil ditambahkan");
@@ -84,7 +84,7 @@ export const updateStack = async (req: Request, res: Response) => {
       });
     }
 
-    const validatedBody = updateStackSchema.parse(req.body);
+    const validatedBody = req.body;
     const result = await stackService.updateExistingStack(
       stackId,
       validatedBody,

@@ -53,7 +53,7 @@ export const showShelf = async (req: Request, res: Response) => {
 
 export const createShelf = async (req: Request, res: Response) => {
   try {
-    const validatedBody = createShelfSchema.parse(req.body);
+    const validatedBody = req.body;
     const result = await shelfService.createNewShelf(validatedBody);
 
     return sendSuccess(res, result, "Rak buku berhasil ditambahkan");
@@ -73,7 +73,7 @@ export const updateShelf = async (req: Request, res: Response) => {
       });
     }
 
-    const validatedBody = updateShelfSchema.parse(req.body);
+    const validatedBody = req.body;
     const result = await shelfService.updateExistingShelf(
       shelfId,
       validatedBody,

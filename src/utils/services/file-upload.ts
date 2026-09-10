@@ -14,7 +14,8 @@ export async function uploadFile(
   });
 
   await s3Client.send(command);
-  return `https://<public-domain>/${folderName}/${fileName}`;
+  const publicUrl = process.env.PUBLIC_STORAGE_URL || "https://<public-domain>";
+  return `${publicUrl}/${folderName}/${fileName}`;
 }
 
 export async function deleteFile(fileKey: string) {

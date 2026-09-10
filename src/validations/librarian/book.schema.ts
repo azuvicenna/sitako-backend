@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const TIPE_BUKU = ["Fisik", "Digital"] as const;
+import { bookTypeEnum } from "@/db/schema";
 
 export const bookCoverSchema = z
   .custom<Express.Multer.File>((file) => !!file, {
@@ -51,7 +51,7 @@ export const createBookSchema = z.object({
     z.array(z.string()).min(1, { message: "Minimal pilih satu genre" }),
   ),
   tipeBuku: z
-    .enum(TIPE_BUKU, { message: "Tipe buku tidak valid" })
+    .enum(bookTypeEnum.enumValues, { message: "Tipe buku tidak valid" })
     .default("Fisik"),
   tahunTerbit: z.preprocess(
     (val) => (val !== undefined && val !== "" ? Number(val) : undefined),

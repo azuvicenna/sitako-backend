@@ -21,7 +21,7 @@ router.use(verifyAuth);
 
 router.get(
   "/status/:statusActive",
-  validate(paginationSchema),
+  validate(paginationSchema, "query"),
   getLibrarianHandler,
 );
 router.get("/:id", showLibrarian);

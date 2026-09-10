@@ -2,7 +2,7 @@ import app from "./app";
 import { connectRedis } from "./config/redis";
 import logger from "./utils/core/logger";
 
-const PORT = 3000;
+const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, async () => {
   try {

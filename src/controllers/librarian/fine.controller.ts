@@ -53,7 +53,7 @@ export const showFine = async (req: Request, res: Response) => {
 
 export const createFine = async (req: Request, res: Response) => {
   try {
-    const validatedBody = createFineSchema.parse(req.body);
+    const validatedBody = req.body;
     const result = await fineService.createNewFine(validatedBody);
 
     return sendSuccess(res, result, "Denda berhasil ditambahkan");
@@ -73,7 +73,7 @@ export const updateFine = async (req: Request, res: Response) => {
       });
     }
 
-    const validatedBody = updateFineSchema.parse(req.body);
+    const validatedBody = req.body;
     const result = await fineService.updateExistingFine(fineId, validatedBody);
 
     if (!result) {

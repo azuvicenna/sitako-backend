@@ -53,7 +53,7 @@ export const showFinePayment = async (req: Request, res: Response) => {
 
 export const createFinePayment = async (req: Request, res: Response) => {
   try {
-    const validatedBody = createFinePaymentSchema.parse(req.body);
+    const validatedBody = req.body;
     const result = await finePaymentService.createNewFinePayment(validatedBody);
 
     return sendSuccess(res, result, "Pembayaran denda berhasil dicatat");
@@ -73,7 +73,7 @@ export const updateFinePayment = async (req: Request, res: Response) => {
       });
     }
 
-    const validatedBody = updateFinePaymentSchema.parse(req.body);
+    const validatedBody = req.body;
     const result = await finePaymentService.updateExistingFinePayment(
       paymentId,
       validatedBody,
