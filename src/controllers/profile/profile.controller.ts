@@ -14,31 +14,12 @@ export const getMyProfile = async (req: AuthRequest, res: Response) => {
     const userId = req.user?.id as string;
     const userRole = req.user?.role as string;
 
-    if (!userId || !userRole) {
-      return res.status(401).json({
-        success: false,
-        message: "Sesi tidak valid",
-      });
-    }
-
     let result;
 
     if (userRole === "Pustakawan") {
       result = await librarianService.getLibrarianById(userId);
-    } else if (userRole === "Anggota") {
-      result = await memberService.getMemberById(userId);
     } else {
-      return res.status(403).json({
-        success: false,
-        message: "Akses ditolak",
-      });
-    }
-
-    if (!result) {
-      return res.status(404).json({
-        success: false,
-        message: "Profil tidak ditemukan",
-      });
+      result = await memberService.getMemberById(userId);
     }
 
     return sendSuccess(res, result);
@@ -52,13 +33,6 @@ export const updateMyProfile = async (req: AuthRequest, res: Response) => {
     const userId = req.user?.id as string;
     const userRole = req.user?.role as string;
 
-    if (!userId || !userRole) {
-      return res.status(401).json({
-        success: false,
-        message: "Sesi tidak valid",
-      });
-    }
-
     let result;
     const validatedFile = req.file
       ? imageFileSchema.parse(req.file)
@@ -71,25 +45,13 @@ export const updateMyProfile = async (req: AuthRequest, res: Response) => {
         validatedBody,
         validatedFile,
       );
-    } else if (userRole === "Anggota") {
+    } else {
       const validatedBody = updateMemberSchema.parse(req.body);
       result = await memberService.updateExistingMember(
         userId,
         validatedBody,
         validatedFile,
       );
-    } else {
-      return res.status(403).json({
-        success: false,
-        message: "Akses ditolak",
-      });
-    }
-
-    if (!result) {
-      return res.status(404).json({
-        success: false,
-        message: "Profil tidak ditemukan",
-      });
     }
 
     return sendSuccess(res, result, "Profil berhasil diperbarui");

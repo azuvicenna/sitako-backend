@@ -5,10 +5,6 @@ import {
   sendError,
   sendSuccess,
 } from "@/utils/core/handler";
-import {
-  createStackSchema,
-  updateStackSchema,
-} from "@/validations/librarian/stack.schema";
 
 export const getStacksHandler = async (req: Request, res: Response) => {
   try {
