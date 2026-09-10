@@ -4,7 +4,7 @@
   "description": "Sistem Informasi Perpustakaan Sekolah (SITAKO) Backend",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "dev": "tsx watch src/server.ts",
     "build": "tsc && tsc-alias",
     "start": "node dist/server.js",
@@ -52,6 +52,6 @@
     "tsc-alias": "^1.9.4",
     "tsconfig-paths": "^4.2.0",
     "tsx": "^4.23.13",
-    "typescript": "^7.0.2"
+    "typescript": "^6.0.3"
   }
 }
