@@ -2,7 +2,7 @@ import { db } from "@/db";
 import { books, members, transactions } from "@/db/schema";
 import { eq, sql, gte, lte, and } from "drizzle-orm";
 import { withCache, withCacheAndPagination } from "@/utils/data/repository";
-import { clearCacheByPattern } from "@/utils/core/clear-cache";
+import { clearCacheByPattern } from "@/utils/core/cache";
 
 export const invalidateDashboardCache = async () => {
   await clearCacheByPattern([
@@ -70,7 +70,12 @@ export const getTodayTransactionsRepo = async (
       ];
 
       if (status && status !== "Semua") {
-        baseConditions.push(eq(transactions.status, status as typeof transactions.$inferSelect["status"]));
+        baseConditions.push(
+          eq(
+            transactions.status,
+            status as (typeof transactions.$inferSelect)["status"],
+          ),
+        );
       }
 
       const whereClause = and(...baseConditions);

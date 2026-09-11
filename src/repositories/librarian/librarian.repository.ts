@@ -2,7 +2,7 @@ import { count, eq, and, ilike, or, desc } from "drizzle-orm";
 import { db } from "@/db";
 import { librarians } from "@/db/schema";
 import { withCacheAndPagination } from "@/utils/data/repository";
-import { clearCacheByPattern } from "@/utils/core/clear-cache";
+import { clearCacheByPattern } from "@/utils/core/cache";
 
 export type LibrarianInsert = typeof librarians.$inferInsert;
 export type LibrarianSelect = typeof librarians.$inferSelect;
@@ -98,7 +98,9 @@ export async function findLibrarianRawById(id: string) {
   return result[0] || null;
 }
 
-export const insertLibrarian = async (data: LibrarianInsert): Promise<LibrarianSelect> => {
+export const insertLibrarian = async (
+  data: LibrarianInsert,
+): Promise<LibrarianSelect> => {
   const result = await db.insert(librarians).values(data).returning();
   const created = result[0];
 
@@ -109,7 +111,10 @@ export const insertLibrarian = async (data: LibrarianInsert): Promise<LibrarianS
   return created;
 };
 
-export const updateLibrarianById = async (id: string, data: Partial<LibrarianInsert>): Promise<LibrarianSelect | null> => {
+export const updateLibrarianById = async (
+  id: string,
+  data: Partial<LibrarianInsert>,
+): Promise<LibrarianSelect | null> => {
   const result = await db
     .update(librarians)
     .set(data)

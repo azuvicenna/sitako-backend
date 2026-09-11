@@ -9,8 +9,11 @@ import {
   findMembersWithPagination,
   MemberInsert,
 } from "@/repositories/librarian/member.repository";
-import { deleteFile, uploadFile } from "@/utils/services/file-upload";
-import { CreateMember, UpdateMember } from "@/validations/librarian/member.schema";
+import { deleteFile, uploadFile } from "@/utils/services/storage";
+import {
+  CreateMember,
+  UpdateMember,
+} from "@/validations/librarian/member.schema";
 import logger from "@/utils/core/logger";
 
 const extractFileKey = (url: string) => url.split("/").slice(-2).join("/");

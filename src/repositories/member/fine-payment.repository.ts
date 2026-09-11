@@ -8,7 +8,7 @@ import {
   books,
 } from "@/db/schema";
 import { withCacheAndPagination } from "@/utils/data/repository";
-import { clearCacheByPattern } from "@/utils/core/clear-cache";
+import { clearCacheByPattern } from "@/utils/core/cache";
 
 export type FinePaymentSelect = typeof finePayments.$inferSelect;
 

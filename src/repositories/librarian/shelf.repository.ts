@@ -2,7 +2,7 @@ import { count, eq, ilike, desc } from "drizzle-orm";
 import { db } from "@/db";
 import { shelves } from "@/db/schema";
 import { withCacheAndPagination } from "@/utils/data/repository";
-import { clearCacheByPattern } from "@/utils/core/clear-cache";
+import { clearCacheByPattern } from "@/utils/core/cache";
 
 export type ShelfInsert = typeof shelves.$inferInsert;
 export type ShelfSelect = typeof shelves.$inferSelect;

@@ -7,7 +7,7 @@ import {
   findBooksWithPagination,
   BookInsert,
 } from "@/repositories/librarian/book.repository";
-import { deleteFile, uploadFile } from "@/utils/services/file-upload";
+import { deleteFile, uploadFile } from "@/utils/services/storage";
 import { CreateBook, UpdateBook } from "@/validations/librarian/book.schema";
 import logger from "@/utils/core/logger";
 

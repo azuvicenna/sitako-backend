@@ -2,7 +2,7 @@ import { count, eq, ilike, desc, and, or } from "drizzle-orm";
 import { db } from "@/db";
 import { transactions, members, librarians, books } from "@/db/schema";
 import { withCacheAndPagination } from "@/utils/data/repository";
-import { clearCacheByPattern } from "@/utils/core/clear-cache";
+import { clearCacheByPattern } from "@/utils/core/cache";
 import { invalidateDashboardCache } from "@/repositories/librarian/dashboard.repository";
 
 export type TransactionInsert = typeof transactions.$inferInsert;
@@ -77,10 +77,7 @@ export async function findTransactionsWithPagination(
   );
 }
 
-export async function findTransaction(
-  id: string,
-  anggotaId: string,
-) {
+export async function findTransaction(id: string, anggotaId: string) {
   const result = await db
     .select({
       id: transactions.id,

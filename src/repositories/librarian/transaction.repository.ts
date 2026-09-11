@@ -2,7 +2,7 @@ import { count, eq, ilike, desc, and, or } from "drizzle-orm";
 import { db } from "@/db";
 import { transactions, members, librarians, books } from "@/db/schema";
 import { withCacheAndPagination } from "@/utils/data/repository";
-import { clearCacheByPattern } from "@/utils/core/clear-cache";
+import { clearCacheByPattern } from "@/utils/core/cache";
 import { invalidateDashboardCache } from "./dashboard.repository";
 
 export type TransactionInsert = typeof transactions.$inferInsert;
@@ -36,7 +36,9 @@ export async function findTransactionsWithPagination(
         : undefined;
 
       const whereClause = and(
-        status === "Semua" ? undefined : eq(transactions.status, status as TransactionSelect["status"]),
+        status === "Semua"
+          ? undefined
+          : eq(transactions.status, status as TransactionSelect["status"]),
         searchCondition,
       );
 

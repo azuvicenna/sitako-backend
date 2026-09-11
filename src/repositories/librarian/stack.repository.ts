@@ -2,7 +2,7 @@ import { count, eq, ilike, and, sql, or, asc } from "drizzle-orm";
 import { db } from "@/db";
 import { stacks, books } from "@/db/schema";
 import { withCacheAndPagination } from "@/utils/data/repository";
-import { clearCacheByPattern } from "@/utils/core/clear-cache";
+import { clearCacheByPattern } from "@/utils/core/cache";
 
 export type StackInsert = typeof stacks.$inferInsert;
 export type StackSelect = typeof stacks.$inferSelect;

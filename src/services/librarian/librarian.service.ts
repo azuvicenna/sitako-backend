@@ -9,8 +9,11 @@ import {
   findLibrariansWithPagination,
   LibrarianInsert,
 } from "@/repositories/librarian/librarian.repository";
-import { deleteFile, uploadFile } from "@/utils/services/file-upload";
-import { CreateLibrarian, UpdateLibrarian } from "@/validations/librarian/librarian.schema";
+import { deleteFile, uploadFile } from "@/utils/services/storage";
+import {
+  CreateLibrarian,
+  UpdateLibrarian,
+} from "@/validations/librarian/librarian.schema";
 import logger from "@/utils/core/logger";
 
 const extractFileKey = (url: string) => url.split("/").slice(-2).join("/");

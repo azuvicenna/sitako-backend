@@ -2,7 +2,7 @@ import { count, eq, or, ilike, desc, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { fines, books } from "@/db/schema";
 import { withCacheAndPagination } from "@/utils/data/repository";
-import { clearCacheByPattern } from "@/utils/core/clear-cache";
+import { clearCacheByPattern } from "@/utils/core/cache";
 
 export type FineInsert = typeof fines.$inferInsert;
 export type FineSelect = typeof fines.$inferSelect;
