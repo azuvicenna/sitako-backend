@@ -1,5 +1,5 @@
 import { sendError, sendSuccess } from "@/utils/core/handler";
-import { Response } from "express";
+import { Request, Response } from "express";
 import * as librarianService from "@/services/librarian/librarian.service";
 import * as memberService from "@/services/librarian/member.service";
 import {
@@ -7,9 +7,8 @@ import {
   updateLibrarianSchema,
 } from "@/validations/librarian/librarian.schema";
 import { updateMemberSchema } from "@/validations/librarian/member.schema";
-import { AuthRequest } from "@/middlewares/auth.middleware";
 
-export const getMyProfile = async (req: AuthRequest, res: Response) => {
+export const getMyProfile = async (req: Request, res: Response) => {
   try {
     const userId = req.user?.id as string;
     const userRole = req.user?.role as string;
@@ -28,7 +27,7 @@ export const getMyProfile = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export const updateMyProfile = async (req: AuthRequest, res: Response) => {
+export const updateMyProfile = async (req: Request, res: Response) => {
   try {
     const userId = req.user?.id as string;
     const userRole = req.user?.role as string;

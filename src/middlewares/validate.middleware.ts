@@ -12,7 +12,7 @@ export const validate = (schema: z.ZodType, source: Source = "body") => {
     } catch (error) {
       if (error instanceof ZodError) {
         return res.status(400).json({
-          status: "error",
+          success: false,
           message: "Validasi gagal",
           errors: error.issues.map((err) => ({
             field: err.path.join("."),
@@ -21,7 +21,7 @@ export const validate = (schema: z.ZodType, source: Source = "body") => {
         });
       }
       return res.status(500).json({
-        status: "error",
+        success: false,
         message: "Internal server error",
       });
     }

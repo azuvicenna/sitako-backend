@@ -116,3 +116,21 @@ export const insertTransaction = async (
 
   return created;
 };
+
+export const updateTransactionStatus = async (
+  id: string,
+  status: TransactionSelect["status"],
+): Promise<TransactionSelect | null> => {
+  const result = await db
+    .update(transactions)
+    .set({ status })
+    .where(eq(transactions.id, id))
+    .returning();
+  const updated = result[0] || null;
+
+  if (updated) {
+    await clearTransactionCache();
+  }
+
+  return updated;
+};

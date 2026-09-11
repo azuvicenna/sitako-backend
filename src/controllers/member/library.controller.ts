@@ -1,20 +1,26 @@
-import { AuthRequest } from "@/middlewares/auth.middleware";
-import { sendError, sendSuccess } from "@/utils/core/handler";
 import { Request, Response } from "express";
+import { sendError, sendSuccess } from "@/utils/core/handler";
 import * as libraryService from "@/services/member/library.service";
 
-export const showBook = async (req: AuthRequest, res: Response) => {
+export const showBook = async (req: Request, res: Response) => {
   try {
     const bookId = req.params.id as string;
 
     if (!bookId) {
-      return res.status(404).json({
+      return res.status(400).json({
         success: false,
-        message: "Data not found",
+        message: "ID buku tidak valid",
       });
     }
 
     const result = await libraryService.getBookById(bookId);
+
+    if (!result) {
+      return res.status(404).json({
+        success: false,
+        message: "Buku tidak ditemukan",
+      });
+    }
 
     return sendSuccess(res, result);
   } catch (error) {
@@ -27,13 +33,20 @@ export const readDigitalBook = async (req: Request, res: Response) => {
     const bookId = req.params.id as string;
 
     if (!bookId) {
-      return res.status(404).json({
+      return res.status(400).json({
         success: false,
-        message: "Data not found",
+        message: "ID buku tidak valid",
       });
     }
 
     const result = await libraryService.getDigitalBookById(bookId);
+
+    if (!result) {
+      return res.status(404).json({
+        success: false,
+        message: "Buku digital tidak ditemukan",
+      });
+    }
 
     return sendSuccess(res, result);
   } catch (error) {
@@ -41,15 +54,17 @@ export const readDigitalBook = async (req: Request, res: Response) => {
   }
 };
 
-export const createBookmark = async (req: AuthRequest, res: Response) => {
+export const createBookmark = async (req: Request, res: Response) => {
   try {
+    // req.body sudah divalidasi oleh validate(createBookmarkSchema) di route
+    // bukuId juga ada di params, anggotaId dari JWT — kita override body dengan nilai yang benar
     const bookId = req.params.id as string;
     const userId = req.user?.id as string;
 
     if (!bookId) {
-      return res.status(404).json({
+      return res.status(400).json({
         success: false,
-        message: "Data not found",
+        message: "ID buku tidak valid",
       });
     }
 
@@ -60,7 +75,7 @@ export const createBookmark = async (req: AuthRequest, res: Response) => {
 
     const result = await libraryService.createNewBookmark(payload);
 
-    return sendSuccess(res, result);
+    return sendSuccess(res, result, "Bookmark berhasil ditambahkan");
   } catch (error) {
     return sendError(res, error, "createBookmark");
   }
@@ -88,6 +103,6 @@ export const deleteBookmark = async (req: Request, res: Response) => {
 
     return sendSuccess(res, result, "Data bookmark berhasil dihapus");
   } catch (error) {
-    return sendError(res, error, "deleteStack");
+    return sendError(res, error, "deleteBookmark");
   }
 };

@@ -7,9 +7,10 @@ import {
   findMemberRawById,
   removeMemberById,
   findMembersWithPagination,
+  MemberInsert,
 } from "@/repositories/librarian/member.repository";
 import { deleteFile, uploadFile } from "@/utils/services/file-upload";
-import { UpdateMember } from "@/validations/librarian/member.schema";
+import { CreateMember, UpdateMember } from "@/validations/librarian/member.schema";
 import logger from "@/utils/core/logger";
 
 const extractFileKey = (url: string) => url.split("/").slice(-2).join("/");
@@ -28,7 +29,7 @@ export const getMemberById = async (id: string) => {
 };
 
 export const createNewMember = async (
-  payload: any,
+  payload: CreateMember,
   fotoFile?: Express.Multer.File,
 ) => {
   let fotoUrl = "";
@@ -38,19 +39,17 @@ export const createNewMember = async (
     fotoUrl = await uploadFile("profiles", fotoFile, `${uuidv4()}.${ext}`);
   }
 
-  const hashedPassword = await bcrypt.hash(payload.password, 10);
+  const hashedPassword = await bcrypt.hash(payload.password as string, 10);
 
-  const memberData = {
+  const memberData: MemberInsert = {
     nama: payload.nama,
     nis: payload.nis,
     email: payload.email,
     password: hashedPassword,
     telepon: payload.telepon,
     foto: fotoUrl,
-    status_aktif:
-      payload.status_aktif !== undefined
-        ? payload.status_aktif === "true" || payload.status_aktif === true
-        : true,
+    // status_aktif sudah di-transform oleh Zod schema menjadi boolean
+    status_aktif: payload.status_aktif ?? true,
   };
 
   try {
@@ -77,7 +76,7 @@ export const updateExistingMember = async (
   const existingMember = await findMemberRawById(id);
   if (!existingMember) return null;
 
-  const updateData: any = { ...payload };
+  const updateData: Partial<MemberInsert> = { ...payload };
 
   if (payload.password) {
     updateData.password = await bcrypt.hash(payload.password, 10);

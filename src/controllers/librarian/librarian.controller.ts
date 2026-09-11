@@ -71,7 +71,7 @@ export const createLibrarian = async (req: Request, res: Response) => {
       validatedFile,
     );
 
-    return sendSuccess(res, result, "Anggota berhasil ditambahkan");
+    return sendSuccess(res, result, "Pustakawan berhasil ditambahkan");
   } catch (error) {
     return sendError(res, error, "createLibrarian");
   }
@@ -84,7 +84,7 @@ export const updateLibrarian = async (req: Request, res: Response) => {
     if (!librarianId) {
       return res.status(400).json({
         success: false,
-        message: "ID anggota tidak valid",
+        message: "ID pustakawan tidak valid",
       });
     }
 

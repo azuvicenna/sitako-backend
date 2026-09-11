@@ -5,6 +5,9 @@ import { withCacheAndPagination } from "@/utils/data/repository";
 import { clearCacheByPattern } from "@/utils/core/clear-cache";
 import { invalidateDashboardCache } from "./dashboard.repository";
 
+export type MemberInsert = typeof members.$inferInsert;
+export type MemberSelect = typeof members.$inferSelect;
+
 const clearMemberCache = async () => {
   await clearCacheByPattern("member:*");
   await invalidateDashboardCache();
@@ -97,7 +100,7 @@ export async function findMemberRawById(id: string) {
   return result[0] || null;
 }
 
-export const insertMember = async (data: any) => {
+export const insertMember = async (data: MemberInsert): Promise<MemberSelect> => {
   const result = await db.insert(members).values(data).returning();
   const created = result[0];
 
@@ -108,7 +111,7 @@ export const insertMember = async (data: any) => {
   return created;
 };
 
-export const updateMemberById = async (id: string, data: any) => {
+export const updateMemberById = async (id: string, data: Partial<MemberInsert>): Promise<MemberSelect | null> => {
   const result = await db
     .update(members)
     .set(data)

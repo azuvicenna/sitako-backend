@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import * as transactionService from "@/services/librarian/transaction.service";
-import { validateTransactionCreation } from "@/services/transaction.validation.service";
+import { validateTransactionCreation } from "@/services/librarian/transaction-validation.service";
 import {
   getPaginationParams,
   sendError,
@@ -77,7 +77,6 @@ export const createTransaction = async (req: Request, res: Response) => {
       });
     }
 
-    validatedBody.status = "Dipinjam";
     const result = await transactionService.createNewTransaction(validatedBody);
 
     return sendSuccess(res, result, "Transaksi berhasil dibuat");

@@ -11,9 +11,9 @@ export const getStacksHandler = async (req: Request, res: Response) => {
     const shelfId = req.params.id as string;
 
     if (!shelfId) {
-      return res.status(404).json({
+      return res.status(400).json({
         success: false,
-        message: "Data not found",
+        message: "ID rak tidak valid",
       });
     }
 

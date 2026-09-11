@@ -4,6 +4,9 @@ import { librarians } from "@/db/schema";
 import { withCacheAndPagination } from "@/utils/data/repository";
 import { clearCacheByPattern } from "@/utils/core/clear-cache";
 
+export type LibrarianInsert = typeof librarians.$inferInsert;
+export type LibrarianSelect = typeof librarians.$inferSelect;
+
 const clearLibrarianCache = async () => {
   await clearCacheByPattern("librarian:*");
 };
@@ -95,7 +98,7 @@ export async function findLibrarianRawById(id: string) {
   return result[0] || null;
 }
 
-export const insertLibrarian = async (data: any) => {
+export const insertLibrarian = async (data: LibrarianInsert): Promise<LibrarianSelect> => {
   const result = await db.insert(librarians).values(data).returning();
   const created = result[0];
 
@@ -106,7 +109,7 @@ export const insertLibrarian = async (data: any) => {
   return created;
 };
 
-export const updateLibrarianById = async (id: string, data: any) => {
+export const updateLibrarianById = async (id: string, data: Partial<LibrarianInsert>): Promise<LibrarianSelect | null> => {
   const result = await db
     .update(librarians)
     .set(data)

@@ -10,6 +10,7 @@ import finePaymentRoutes from "./librarian/fine-payment";
 import transactionRoutes from "./librarian/transaction";
 import libraryRoutes from "./member/library";
 import memberTransactionRoutes from "./member/transaction";
+import memberFinePaymentRoutes from "./member/fine-payment";
 import profileRoutes from "./profile/profile";
 
 const router = Router();
@@ -29,6 +30,7 @@ router.use("/transactions", transactionRoutes);
 // member routes
 router.use("/book", libraryRoutes);
 router.use("/member/transactions", memberTransactionRoutes);
+router.use("/member/fine-payments", memberFinePaymentRoutes);
 
 // profile routes
 router.use("/profile", profileRoutes);

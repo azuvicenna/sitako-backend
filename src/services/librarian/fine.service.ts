@@ -38,5 +38,8 @@ export const updateExistingFine = async (id: string, payload: UpdateFine) => {
 };
 
 export const deleteExistingFine = async (id: string) => {
+  const existingFine = await findFine(id);
+  if (!existingFine) return null;
+
   return await removeFineById(id);
 };

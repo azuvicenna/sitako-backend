@@ -19,4 +19,14 @@ export const createTransactionSchema = z.object({
     .default("Menunggu Persetujuan"),
 });
 
+export const returnTransactionSchema = z.object({
+  /**
+   * Apakah buku dilaporkan hilang?
+   * Hanya relevan jika buku SUDAH melewati tanggal kembali (terlambat).
+   * Jika buku belum terlambat, field ini diabaikan.
+   */
+  isBukuHilang: z.boolean({ message: "Status kehilangan buku wajib diisi (true/false)" }).default(false),
+});
+
 export type CreateTransaction = z.infer<typeof createTransactionSchema>;
+export type ReturnTransaction = z.infer<typeof returnTransactionSchema>;

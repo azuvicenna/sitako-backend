@@ -12,10 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Added
 
 - Menambahkan validasi pada transaksi librarian dan member pada saat create transaksi (cek denda, cek stok, cek maksimum pinjam)
+- Menambahkan riwayat pembayaran denda untuk member
 
 #### Change
 
 - Mengubah param filter menjadi query param agar lebih sesuai pada filter data
+- Merefaktor: Logika yang masuk akal — beneran menyelesaikan masalah, termasuk edge case yang jelas, Keamanan — validasi/sanitasi input, jangan bocorkan data sensitif, Keterbacaan & maintainability — mudah dipahami orang lain (atau diri sendiri nanti), Konsistensi — ikuti pola/style yang sudah ada di codebase, Performa — hindari kerja yang tidak perlu (loop berlebihan, query berulang, dsb), tapi jangan over-optimize di awal kalau belum perlu
 
 ### [2026-09-10]
 

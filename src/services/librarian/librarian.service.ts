@@ -7,9 +7,10 @@ import {
   findLibrarianRawById,
   removeLibrarianById,
   findLibrariansWithPagination,
+  LibrarianInsert,
 } from "@/repositories/librarian/librarian.repository";
 import { deleteFile, uploadFile } from "@/utils/services/file-upload";
-import { UpdateLibrarian } from "@/validations/librarian/librarian.schema";
+import { CreateLibrarian, UpdateLibrarian } from "@/validations/librarian/librarian.schema";
 import logger from "@/utils/core/logger";
 
 const extractFileKey = (url: string) => url.split("/").slice(-2).join("/");
@@ -28,7 +29,7 @@ export const getLibrarianById = async (id: string) => {
 };
 
 export const createNewLibrarian = async (
-  payload: any,
+  payload: CreateLibrarian,
   fotoFile?: Express.Multer.File,
 ) => {
   let fotoUrl = "";
@@ -38,19 +39,17 @@ export const createNewLibrarian = async (
     fotoUrl = await uploadFile("profiles", fotoFile, `${uuidv4()}.${ext}`);
   }
 
-  const hashedPassword = await bcrypt.hash(payload.password, 10);
+  const hashedPassword = await bcrypt.hash(payload.password as string, 10);
 
-  const librarianData = {
+  const librarianData: LibrarianInsert = {
     nama: payload.nama,
     nip: payload.nip,
     email: payload.email,
     password: hashedPassword,
     telepon: payload.telepon,
     foto: fotoUrl,
-    status_aktif:
-      payload.status_aktif !== undefined
-        ? payload.status_aktif === "true" || payload.status_aktif === true
-        : true,
+    // status_aktif sudah di-transform oleh Zod schema menjadi boolean
+    status_aktif: payload.status_aktif ?? true,
   };
 
   try {
@@ -77,7 +76,7 @@ export const updateExistingLibrarian = async (
   const existingLibrarian = await findLibrarianRawById(id);
   if (!existingLibrarian) return null;
 
-  const updateData: any = { ...payload };
+  const updateData: Partial<LibrarianInsert> = { ...payload };
 
   if (payload.password) {
     updateData.password = await bcrypt.hash(payload.password, 10);

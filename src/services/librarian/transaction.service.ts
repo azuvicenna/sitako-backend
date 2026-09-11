@@ -25,7 +25,11 @@ export const getTransactionById = async (id: string) => {
 };
 
 export const createNewTransaction = async (payload: CreateTransaction) => {
-  const transactionData = { ...payload } as TransactionInsert;
+  const transactionData = {
+    ...payload,
+    // Status "Dipinjam" di-enforce di service layer (bukan di controller)
+    status: "Dipinjam" as TransactionInsert["status"],
+  } as TransactionInsert;
   return await insertTransaction(transactionData);
 };
 
