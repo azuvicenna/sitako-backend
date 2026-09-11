@@ -1,19 +1,17 @@
 import { Request, Response } from "express";
 import * as transactionService from "@/services/librarian/transaction.service";
+import { validateTransactionCreation } from "@/services/transaction.validation.service";
 import {
   getPaginationParams,
   sendError,
   sendSuccess,
 } from "@/utils/core/handler";
-import {
-  createTransactionSchema,
-  updateTransactionSchema,
-} from "@/validations/librarian/transaction.schema";
 import { transactionStatusEnum } from "@/db/schema";
+
 
 export const getTransactionsHandler = async (req: Request, res: Response) => {
   try {
-    const status = req.params.status as string;
+    const status = req.query.status as string;
 
     if (
       !status ||
@@ -70,6 +68,16 @@ export const showTransaction = async (req: Request, res: Response) => {
 export const createTransaction = async (req: Request, res: Response) => {
   try {
     const validatedBody = req.body;
+    
+    const validationResult = await validateTransactionCreation(validatedBody.anggotaId, validatedBody.bukuId);
+    if (!validationResult.success) {
+      return res.status(400).json({
+        success: false,
+        message: validationResult.message,
+      });
+    }
+
+    validatedBody.status = "Dipinjam";
     const result = await transactionService.createNewTransaction(validatedBody);
 
     return sendSuccess(res, result, "Transaksi berhasil dibuat");

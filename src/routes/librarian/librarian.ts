@@ -20,7 +20,7 @@ const router = Router();
 router.use(verifyAuth);
 
 router.get(
-  "/status/:statusActive",
+  "/",
   validate(paginationSchema, "query"),
   getLibrarianHandler,
 );

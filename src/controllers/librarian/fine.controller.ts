@@ -5,10 +5,6 @@ import {
   sendError,
   sendSuccess,
 } from "@/utils/core/handler";
-import {
-  createFineSchema,
-  updateFineSchema,
-} from "@/validations/librarian/fine.schema";
 
 export const getFinesHandler = async (req: Request, res: Response) => {
   try {

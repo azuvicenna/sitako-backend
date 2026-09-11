@@ -9,6 +9,7 @@ import memberRoutes from "./librarian/member";
 import finePaymentRoutes from "./librarian/fine-payment";
 import transactionRoutes from "./librarian/transaction";
 import libraryRoutes from "./member/library";
+import memberTransactionRoutes from "./member/transaction";
 import profileRoutes from "./profile/profile";
 
 const router = Router();
@@ -27,8 +28,10 @@ router.use("/transactions", transactionRoutes);
 
 // member routes
 router.use("/book", libraryRoutes);
+router.use("/member/transactions", memberTransactionRoutes);
 
 // profile routes
 router.use("/profile", profileRoutes);
 
 export default router;
+

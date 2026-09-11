@@ -24,9 +24,9 @@ const bookUpload = upload.fields([
   { name: "file", maxCount: 1 },
 ]);
 
-router.get("/:bookType", validate(paginationSchema, "query"), getBookHandler);
+router.get("/", validate(paginationSchema, "query"), getBookHandler);
 router.get("/detail/:id", showBook);
-router.post("/:bookType", bookUpload, validate(createBookSchema), createBook);
+router.post("/", bookUpload, validate(createBookSchema), createBook);
 router.put("/:id", bookUpload, validate(updateBookSchema), updateBook);
 router.delete("/:id", deleteBook);
 

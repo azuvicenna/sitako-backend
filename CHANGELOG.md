@@ -7,7 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### [2026-09-09]
+### [2026-09-11]
+
+#### Added
+
+- Menambahkan validasi pada transaksi librarian dan member pada saat create transaksi (cek denda, cek stok, cek maksimum pinjam)
+
+#### Change
+
+- Mengubah param filter menjadi query param agar lebih sesuai pada filter data
+
+### [2026-09-10]
 
 #### Added
 

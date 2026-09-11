@@ -5,10 +5,6 @@ import {
   sendError,
   sendSuccess,
 } from "@/utils/core/handler";
-import {
-  createShelfSchema,
-  updateShelfSchema,
-} from "@/validations/librarian/shelf.schema";
 
 export const getShelvesHandler = async (req: Request, res: Response) => {
   try {

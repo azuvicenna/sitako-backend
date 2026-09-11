@@ -18,7 +18,7 @@ const router = Router();
 
 router.use(verifyAuth);
 
-router.get("/:status", validate(paginationSchema, "query"), getTransactionsHandler);
+router.get("/", validate(paginationSchema, "query"), getTransactionsHandler);
 router.get("/detail/:id", showTransaction);
 router.post("/", validate(createTransactionSchema), createTransaction);
 router.put("/:id", validate(updateTransactionSchema), updateTransaction);

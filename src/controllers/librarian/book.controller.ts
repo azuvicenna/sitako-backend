@@ -10,13 +10,11 @@ import "multer";
 import {
   bookCoverSchema,
   bookPdfSchema,
-  createBookSchema,
-  updateBookSchema,
 } from "@/validations/librarian/book.schema";
 
 export const getBookHandler = async (req: Request, res: Response) => {
   try {
-    const bookType = req.params.bookType as string;
+    const bookType = req.query.bookType as string;
 
     if (!bookType || !bookTypeEnum.enumValues.includes(bookType as any)) {
       return res.status(400).json({
@@ -67,7 +65,7 @@ export const showBook = async (req: Request, res: Response) => {
 
 export const createBook = async (req: Request, res: Response) => {
   try {
-    const bookTypeParam = req.params.bookType as string;
+    const bookTypeParam = req.query.bookType as string;
 
     if (
       !bookTypeParam ||

@@ -6,14 +6,12 @@ import {
   sendSuccess,
 } from "@/utils/core/handler";
 import {
-  createLibrarianSchema,
   imageFileSchema,
-  updateLibrarianSchema,
 } from "@/validations/librarian/librarian.schema";
 
 export const getLibrarianHandler = async (req: Request, res: Response) => {
   try {
-    const statusActive = req.params.statusActive as string;
+    const statusActive = req.query.statusActive as string;
 
     if (!statusActive || !["Semua", "true", "false"].includes(statusActive)) {
       return res.status(400).json({

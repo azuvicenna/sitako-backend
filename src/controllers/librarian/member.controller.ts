@@ -5,15 +5,11 @@ import {
   sendError,
   sendSuccess,
 } from "@/utils/core/handler";
-import {
-  createMemberSchema,
-  updateMemberSchema,
-} from "@/validations/librarian/member.schema";
 import { imageFileSchema } from "@/validations/librarian/librarian.schema";
 
 export const getMemberHandler = async (req: Request, res: Response) => {
   try {
-    const statusActive = req.params.statusActive as string;
+    const statusActive = req.query.statusActive as string;
 
     if (!statusActive || !["Semua", "true", "false"].includes(statusActive)) {
       return res.status(400).json({
