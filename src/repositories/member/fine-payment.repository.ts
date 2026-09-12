@@ -8,13 +8,8 @@ import {
   books,
 } from "@/db/schema";
 import { withCacheAndPagination } from "@/utils/data/repository";
-import { clearCacheByPattern } from "@/utils/core/cache";
 
 export type FinePaymentSelect = typeof finePayments.$inferSelect;
-
-const clearMemberFinePaymentCache = async (anggotaId: string) => {
-  await clearCacheByPattern(`member-fine-payment:anggota:${anggotaId}:*`);
-};
 
 export async function findFinePaymentsWithPagination(
   anggotaId: string,
@@ -60,7 +55,7 @@ export async function findFinePaymentsWithPagination(
             judulBuku: books.judul,
           })
           .from(finePayments)
-          .innerJoin(librarians, eq(finePayments.pustakawanId, librarians.id))
+          .leftJoin(librarians, eq(finePayments.pustakawanId, librarians.id))
           .innerJoin(members, eq(finePayments.anggotaId, members.id))
           .innerJoin(
             transactions,
@@ -74,7 +69,7 @@ export async function findFinePaymentsWithPagination(
         db
           .select({ total: count() })
           .from(finePayments)
-          .innerJoin(librarians, eq(finePayments.pustakawanId, librarians.id))
+          .leftJoin(librarians, eq(finePayments.pustakawanId, librarians.id))
           .innerJoin(members, eq(finePayments.anggotaId, members.id))
           .innerJoin(
             transactions,
@@ -110,7 +105,7 @@ export async function findFinePayment(id: string, anggotaId: string) {
       statusTransaksi: transactions.status,
     })
     .from(finePayments)
-    .innerJoin(librarians, eq(finePayments.pustakawanId, librarians.id))
+    .leftJoin(librarians, eq(finePayments.pustakawanId, librarians.id))
     .innerJoin(members, eq(finePayments.anggotaId, members.id))
     .innerJoin(transactions, eq(finePayments.transaksiId, transactions.id))
     .innerJoin(books, eq(transactions.bukuId, books.id))

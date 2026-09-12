@@ -175,12 +175,18 @@ export const transactions = pgTable("transactions", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+export const paymentStatusEnum = pgEnum("status_pembayaran_enum", [
+  "UNPAID",
+  "PAID",
+  "EXPIRED",
+  "FAILED",
+]);
+
 export const finePayments = pgTable("payments", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => generateId()),
   pustakawanId: text("pustakawan_id")
-    .notNull()
     .references(() => librarians.id, {
       onDelete: "restrict",
       onUpdate: "restrict",
@@ -203,5 +209,11 @@ export const finePayments = pgTable("payments", {
   metodePembayaran: paymentMethodEnum("metode_pembayaran")
     .default("Tunai")
     .notNull(),
+  paymentStatus: paymentStatusEnum("payment_status")
+    .default("UNPAID")
+    .notNull(),
+  tripayReference: text("tripay_reference").unique(),
+  paymentMethodCode: text("payment_method_code"),
+  checkoutUrl: text("checkout_url"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });

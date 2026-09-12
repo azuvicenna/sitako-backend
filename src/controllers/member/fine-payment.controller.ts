@@ -53,3 +53,21 @@ export const showFinePayment = async (req: Request, res: Response) => {
     return sendError(res, error, "showFinePayment");
   }
 };
+
+export const initiatePayment = async (req: Request, res: Response) => {
+  try {
+    const anggotaId = req.user?.id as string;
+    const validatedBody = req.body;
+    
+    // Asumsi req.body divalidasi oleh Zod middleware (initiateOnlinePaymentSchema)
+    const result = await finePaymentService.initiateOnlinePayment(
+      anggotaId,
+      validatedBody.transaksiId,
+      validatedBody.paymentMethodCode
+    );
+
+    return sendSuccess(res, result, "Pembayaran berhasil diinisiasi");
+  } catch (error) {
+    return sendError(res, error, "initiatePayment");
+  }
+};

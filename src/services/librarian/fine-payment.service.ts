@@ -24,7 +24,11 @@ export const getFinePaymentById = async (id: string) => {
 };
 
 export const createNewFinePayment = async (payload: CreateFinePayment) => {
-  const paymentData = { ...payload } as FinePaymentInsert;
+  const paymentData = { 
+    ...payload, 
+    paymentStatus: "PAID",
+    tglBayar: payload.tglBayar || new Date()
+  } as FinePaymentInsert;
   return await insertFinePayment(paymentData);
 };
 

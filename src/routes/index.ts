@@ -14,10 +14,15 @@ import memberTransactionRoutes from "./member/transaction";
 import memberFinePaymentRoutes from "./member/fine-payment";
 import profileRoutes from "./profile/profile";
 
+import tripayWebhookRoutes from "./webhook/tripay";
+
 const router = Router();
 
 // auth routes
 router.use("/auth", authRoutes);
+
+// webhook routes
+router.use("/webhooks/tripay", tripayWebhookRoutes);
 
 // librarian routes
 router.use("/dashboard", dashboardRoutes);

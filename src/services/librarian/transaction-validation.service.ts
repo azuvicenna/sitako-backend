@@ -1,22 +1,56 @@
 import { db } from "@/db";
-import { transactions, books } from "@/db/schema";
+import { transactions, books, finePayments } from "@/db/schema";
 import { and, eq, inArray, sql } from "drizzle-orm";
 
-export const validateTransactionCreation = async (anggotaId: string, bukuId: string) => {
+export const validateTransactionCreation = async (
+  anggotaId: string,
+  bukuId: string,
+) => {
   // 1. Cek status denda (Terlambat, Tidak Mengembalikan)
   const penaltyTransactions = await db
-    .select({ id: transactions.id })
+    .select({ id: transactions.id, status: transactions.status })
     .from(transactions)
     .where(
       and(
         eq(transactions.anggotaId, anggotaId),
-        inArray(transactions.status, ["Terlambat", "Tidak Mengembalikan"])
-      )
-    )
-    .limit(1);
+        inArray(transactions.status, ["Terlambat", "Tidak Mengembalikan"]),
+      ),
+    );
 
   if (penaltyTransactions.length > 0) {
-    return { success: false, message: "Member memiliki transaksi yang terlambat atau tidak dikembalikan" };
+    for (const trx of penaltyTransactions) {
+      if (trx.status === "Terlambat") {
+        // Jika terlambat, maka harus selalu diblokir sampai pustakawan
+        // mengonfirmasi pengembalian fisik dengan mengubah status ke "Dikembalikan".
+        return {
+          success: false,
+          message:
+            "Member memiliki buku yang terlambat dikembalikan (fisik belum dikonfirmasi)",
+        };
+      }
+
+      if (trx.status === "Tidak Mengembalikan") {
+        // Jika buku hilang, cek apakah dendanya sudah lunas
+        const payment = await db
+          .select({ id: finePayments.id })
+          .from(finePayments)
+          .where(
+            and(
+              eq(finePayments.transaksiId, trx.id),
+              eq(finePayments.paymentStatus, "PAID"),
+            ),
+          )
+          .limit(1);
+
+        if (payment.length === 0) {
+          return {
+            success: false,
+            message:
+              "Member memiliki denda buku hilang yang belum dibayar lunas",
+          };
+        }
+      }
+    }
   }
 
   // 2. Cek ketersediaan buku
@@ -42,8 +76,8 @@ export const validateTransactionCreation = async (anggotaId: string, bukuId: str
           "Dipinjam",
           "Terlambat",
           "Tidak Mengembalikan",
-        ])
-      )
+        ]),
+      ),
     );
 
   const totalBorrowed = Number(borrowedBooksQuery[0]?.count || 0);
@@ -63,14 +97,19 @@ export const validateTransactionCreation = async (anggotaId: string, bukuId: str
           "Menunggu Persetujuan",
           "Menunggu Diambil",
           "Dipinjam",
-        ])
-      )
+        ]),
+      ),
     );
 
-  const activeTransactionsCount = Number(activeTransactionsQuery[0]?.count || 0);
+  const activeTransactionsCount = Number(
+    activeTransactionsQuery[0]?.count || 0,
+  );
 
   if (activeTransactionsCount >= 3) {
-    return { success: false, message: "Maksimum pinjam tercapai (maksimal 3 transaksi aktif)" };
+    return {
+      success: false,
+      message: "Maksimum pinjam tercapai (maksimal 3 transaksi aktif)",
+    };
   }
 
   return { success: true };

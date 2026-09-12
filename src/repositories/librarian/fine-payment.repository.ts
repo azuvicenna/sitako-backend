@@ -59,7 +59,7 @@ export async function findFinePaymentsWithPagination(
             judulBuku: books.judul,
           })
           .from(finePayments)
-          .innerJoin(librarians, eq(finePayments.pustakawanId, librarians.id))
+          .leftJoin(librarians, eq(finePayments.pustakawanId, librarians.id))
           .innerJoin(members, eq(finePayments.anggotaId, members.id))
           .innerJoin(
             transactions,
@@ -73,7 +73,7 @@ export async function findFinePaymentsWithPagination(
         db
           .select({ total: count() })
           .from(finePayments)
-          .innerJoin(librarians, eq(finePayments.pustakawanId, librarians.id))
+          .leftJoin(librarians, eq(finePayments.pustakawanId, librarians.id))
           .innerJoin(members, eq(finePayments.anggotaId, members.id))
           .innerJoin(
             transactions,
@@ -145,4 +145,13 @@ export const removeFinePaymentById = async (
   }
 
   return deleted;
+};
+
+export const findPaymentByTripayReference = async (reference: string): Promise<FinePaymentSelect | null> => {
+  const result = await db
+    .select()
+    .from(finePayments)
+    .where(eq(finePayments.tripayReference, reference))
+    .limit(1);
+  return result[0] || null;
 };

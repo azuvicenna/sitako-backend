@@ -45,6 +45,9 @@ jest.mock("@/controllers/member/fine-payment.controller", () => ({
   showFinePayment: jest.fn((req, res) =>
     res.status(200).json({ success: true, data: mockFinePayment })
   ),
+  initiatePayment: jest.fn((req, res) =>
+    res.status(200).json({ success: true, message: "Pembayaran berhasil diinisiasi" })
+  ),
 }));
 
 describe("Fine Payment Endpoints", () => {
@@ -190,6 +193,35 @@ describe("Fine Payment Endpoints", () => {
 
       expect(res.status).toBe(200);
       expect(res.body.data).toHaveProperty("metodePembayaran");
+    });
+  });
+
+  describe("POST /api/member/fine-payments/pay (Member)", () => {
+    it("should return 401 when not authenticated", async () => {
+      const res = await request(app).post("/api/member/fine-payments/pay");
+      expect(res.status).toBe(401);
+    });
+
+    it("should return 200 with valid data", async () => {
+      const res = await request(app)
+        .post("/api/member/fine-payments/pay")
+        .set("Cookie", `token=${token}`)
+        .send({
+          transaksiId: "tx-id-001",
+          paymentMethodCode: "QRIS",
+        });
+
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
+    });
+
+    it("should return 400 when required fields are missing", async () => {
+      const res = await request(app)
+        .post("/api/member/fine-payments/pay")
+        .set("Cookie", `token=${token}`)
+        .send({});
+
+      expect(res.status).toBe(400);
     });
   });
 });
