@@ -7,6 +7,7 @@ import shelfRoutes from "./librarian/shelf";
 import librarianRoutes from "./librarian/librarian";
 import memberRoutes from "./librarian/member";
 import finePaymentRoutes from "./librarian/fine-payment";
+import fineRoutes from "./librarian/fine";
 import transactionRoutes from "./librarian/transaction";
 import libraryRoutes from "./member/library";
 import memberTransactionRoutes from "./member/transaction";
@@ -25,6 +26,7 @@ router.use("/shelves", shelfRoutes);
 router.use("/user/librarians", librarianRoutes);
 router.use("/user/members", memberRoutes);
 router.use("/fine-payments", finePaymentRoutes);
+router.use("/fines", fineRoutes);
 router.use("/transactions", transactionRoutes);
 
 // member routes
