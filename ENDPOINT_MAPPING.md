@@ -90,6 +90,8 @@ Berikut adalah mapping alur fungsi dari masing-masing fitur utama beserta deskri
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | `/fine-payments/` | GET | Mendapatkan daftar seluruh bukti pembayaran denda keterlambatan | `getFinePaymentsHandler` | `getFinePaymentsWithPagination` | `findFinePaymentsWithPagination` |
 | `/fine-payments/:id` | GET | Melihat detail dari proses pembayaran suatu denda | `showFinePayment` | `getFinePaymentById` | `findFinePayment` |
+| `/member/fine-payments/pay` | POST | Menginisiasi pembayaran denda secara online via Tripay | `initiatePayment` | `initiateOnlinePayment` | `insertFinePayment` |
+| `/webhooks/tripay` | POST | Menerima notifikasi otomatis (Callback) dari Tripay saat pembayaran lunas | `tripayWebhook` | *(Direct)* | `updateFinePaymentById` |
 | `/fines/` | GET | Mengambil semua catatan tanggungan denda yang sedang atau belum dibayar | `getFinesHandler` | `getFinesWithPagination` | `findFinesWithPagination` |
 | `/fines/detail/:id` | GET | Menampilkan rincian jumlah denda spesifik pada suatu transaksi | `showFine` | `getFineById` | `findFine` |
 
