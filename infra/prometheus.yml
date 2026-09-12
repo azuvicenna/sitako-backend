@@ -1,0 +1,28 @@
+global:
+  scrape_interval: 15s # seberapa sering scrape semua target (default)
+  evaluation_interval: 15s # seberapa sering evaluasi alerting rules
+
+# rule_files:
+#   - "alert.rules.yml"    # aktifkan kalau nanti mau tambah alerting rules
+
+scrape_configs:
+  # Prometheus memonitor dirinya sendiri
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  # App SITAKO-backend (Express + prom-client di endpoint /metrics)
+  - job_name: "sitako-app"
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["app:8080"]
+
+  # Postgres exporter
+  - job_name: "postgres"
+    static_configs:
+      - targets: ["postgres_exporter:9187"]
+
+  # Redis exporter
+  - job_name: "redis"
+    static_configs:
+      - targets: ["redis_exporter:9121"]

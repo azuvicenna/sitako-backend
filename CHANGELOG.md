@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Menambahkan Unit Test dan Integration Test
 - Menambahkan utils service untuk payment gateway tripay dan integration test nya
-
+- Menambahkan prometheus dan grafana k6 load testing
 
 ### [2026-09-11]
 

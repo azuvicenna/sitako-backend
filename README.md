@@ -30,6 +30,7 @@ Berikut adalah rincian fungsi dari masing-masing dependencies utama yang terdaft
 - **`jsonwebtoken`**: Untuk membuat dan memverifikasi JSON Web Token (JWT) untuk sistem otentikasi.
 - **`nodemailer`**: Library untuk mengirim email (misal: verifikasi akun, reset password) via SMTP.
 - **`pg`**: Node.js client murni untuk PostgreSQL (koneksi database utama).
+- **`prom-client`**: Mengumpulkan dan menghitung metrics, lalu menyajikannya dalam format yang bisa dibaca Prometheus.
 - **`redis`**: Client Redis resmi untuk Node.js guna mengelola cache dan session.
 - **`svg-captcha`**: Untuk menghasilkan gambar captcha berbasis SVG (biasanya untuk keamanan form login/register).
 - **`typst`**: Package wrapper untuk menjalankan engine compiler Typst dari dalam Node.js.

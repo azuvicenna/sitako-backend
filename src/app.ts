@@ -3,11 +3,16 @@ import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import routes from "./routes";
-import { requestLogger } from "./middlewares/request-logger.middleware";
+import { requestLogger } from "@/middlewares/request-logger.middleware";
 import logger from "./utils/core/logger";
+import {
+  metricsMiddleware,
+  metricsHandler,
+} from "@/middlewares/matrics.middleware";
 
 const app = express();
 
+app.use(metricsMiddleware);
 app.use(helmet());
 app.use(
   cors({
@@ -21,6 +26,9 @@ app.use(express.json({ limit: "1mb" }));
 app.use(requestLogger);
 
 app.use("/api", routes);
+
+// Metrics prometheus
+app.get("/metrics", metricsHandler);
 
 // Health Check Route for Docker/Jenkins
 app.get("/", (req: Request, res: Response) => {
